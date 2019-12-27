@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nnxy.jgz.oasystem.mapper.FlowMapper">
+
+    <insert id="insert" parameterType="Flow">
+        insert into t_flow (flow_id, flow_name, flow_description, flow_state)
+        values (#{flowId},#{flowName},#{flowDescription},#{flowState})
+    </insert>
+
+    <select id="flowList" resultMap="flowMap">
+        select
+        f.flow_id flow_id,f.flow_name flow_name,
+        f.flow_state flow_state,f.flow_description flow_description,
+        fl.flow_line_id flow_line_id,fl.flow_line_description flow_line_description,
+        fn1.flow_node_id p_flow_node_id,fn1.flow_node_name p_flow_node_name,
+        fn1.flow_node_description p_flow_node_description,fn1.position_id p_position_id,
+        fn2.flow_node_id n_flow_node_id,fn2.flow_node_name n_flow_node_name,
+        fn2.flow_node_description n_flow_node_description,fn2.position_id n_position_id
+        from t_flow f
+        left join t_flow_line fl
+        on f.flow_id = fl.flow_id
+        left join t_flow_node fn1
+        on fl.prev_node_id = fn1.flow_node_id
+        left join t_flow_node fn2
+        on fl.next_node_id = fn2.flow_node_id
+    </select>
+    <resultMap id="flowMap" type="Flow">
+        <id column="flow_id" property="flowId" javaType="String"/>
+        <result column="flow_name" property="flowName" javaType="String"/>
+        <result column="flow_state" property="flowState" javaType="Integer"/>
+        <result column="flow_description" property="flowDescription" javaType="String"/>
+        <collection property="flowLineList" ofType="FlowLine" column="flow_line_id">
+            <id column="flow_line_id" property="flowLineId" javaType="String"/>
+            <id column="flow_line_description" property="flowLineDescription" javaType="String"/>
+            <association property="prevNode" column="p_flow_node_id" javaType="FlowNode" >
+                <id column="p_flow_node_id" property="flowNodeId" javaType="String"/>
+                <result column="p_flow_node_name" property="flowNodeName" javaType="String"/>
+                <result column="p_flow_node_description" property="flowNodeDescription" javaType="String"/>
+                <association property="position" column="p_position_id" javaType="Position">
+                    <id column="p_position_id" property="positionId" javaType="String"/>
+                </association>
+            </association>
+            <association property="nextNode" column="n_flow_node_id" javaType="FlowNode">
+                <id column="n_flow_node_id" property="flowNodeId" javaType="String"/>
+                <result column="N_flow_node_name" property="flowNodeName" javaType="String"/>
+                <result column="N_flow_node_description" property="flowNodeDescription" javaType="String"/>
+                <association property="position" column="N_position_id" javaType="Position">
+                    <id column="N_position_id" property="positionId" javaType="String"/>
+                </association>
+            </association>
+        </collection>
+    </resultMap>
+
+    <update id="update" parameterType="Flow">
+        update t_flow
+        <trim prefix="set" suffixOverrides=",">
+            <if test="flowName!= null and flowName != ''">
+                flow_name = #{flowName},
+            </if>
+            <if test="flowDescription != null and flowDescription != ''">
+                flow_description = #{flowDescription};
+            </if>
+            <if test="flowState!=null">
+                flow_state = #{flowState},
+            </if>
+        </trim>
+        where flow_id = #{flowId}
+    </update>
+
+    <delete id="deleteByFlowId" parameterType="String">
+        delete from t_flow where flow_id = #{v}
+    </delete>
+</mapper>

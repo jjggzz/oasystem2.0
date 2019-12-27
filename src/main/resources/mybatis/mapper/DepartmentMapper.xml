@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nnxy.jgz.oasystem.mapper.DepartmentMapper">
+
+    <select id="departmentList" resultMap="departmentMap">
+        select
+        child.department_id department_id,child.department_name department_name,
+        child.department_number department_number,child.department_level department_level,
+        parent.department_id p_id,parent.department_name p_name
+        from t_department child
+        left join t_department parent
+        on child.department_parent = parent.department_id
+    </select>
+    <select id="getDepartmentByDepartmentId" parameterType="String" resultMap="departmentMap">
+        select
+        child.department_id department_id,child.department_name department_name,
+        child.department_number department_number,child.department_level department_level,
+        parent.department_id p_id,parent.department_name p_name
+        from t_department child
+        left join t_department parent
+        on child.department_parent = parent.department_id
+        where child.department_id = #{v}
+    </select>
+    <resultMap id="departmentMap" type="Department">
+        <id column="department_id" property="departmentId" javaType="String"/>
+        <result column="department_name" property="departmentName" javaType="String"/>
+        <result column="department_number" property="departmentNumber" javaType="Integer"/>
+        <result column="department_level" property="departmentLevel" javaType="Integer"/>
+        <association property="departmentParent" column="p_id" javaType="Department">
+            <id column="p_id" property="departmentId" javaType="String"/>
+            <result column="p_name" property="departmentName" javaType="String"/>
+        </association>
+    </resultMap>
+
+    <select id="getDepartmentTreeByDepartmentId" parameterType="String" resultMap="departmentTreeMap">
+        select
+        child.department_id department_id,child.department_name department_name,
+        child.department_number department_number,child.department_level department_level,
+        parent.department_id p_id,parent.department_name p_name
+        from t_department child
+        left join t_department parent
+        on child.department_parent = parent.department_id
+        where child.department_id = #{v}
+    </select>
+    <resultMap id="departmentTreeMap" type="Department">
+        <id column="department_id" property="departmentId" javaType="String"/>
+        <result column="department_name" property="departmentName" javaType="String"/>
+        <result column="department_number" property="departmentNumber" javaType="Integer"/>
+        <result column="department_level" property="departmentLevel" javaType="Integer"/>
+        <association property="departmentParent" column="p_id" javaType="Department">
+            <id column="p_id" property="departmentId" javaType="String"/>
+            <result column="p_name" property="departmentName" javaType="String"/>
+        </association>
+        <collection property="childDepartmentList" ofType="Department" column="department_id"
+                    select="getChildById"/>
+    </resultMap>
+    <select id="getChildById" parameterType="String" resultMap="departmentTreeMap">
+        select
+        child.department_id department_id,child.department_name department_name,
+        child.department_number department_number,child.department_level department_level,
+        parent.department_id p_id,parent.department_name p_name
+        from t_department child
+        left join t_department parent
+        on child.department_parent = parent.department_id
+        where child.department_parent = #{v}
+    </select>
+
+
+
+    <insert id="insert" parameterType="Department">
+        insert into
+        t_department(department_id, department_name, department_number, department_level, department_parent)
+        values (#{departmentId},#{departmentName},0,#{departmentLevel},#{departmentParent.departmentId})
+    </insert>
+
+    <update id="updateLevelAndParentId" parameterType="List">
+        update t_department
+        <trim prefix="set" suffixOverrides=",">
+            <trim prefix="department_level = case " suffix="end,">
+                <foreach collection="list" item="item" index="index" >
+                    when department_id = #{item.departmentId}
+                    then #{item.departmentLevel}
+                </foreach>
+            </trim>
+            <trim prefix="department_parent = case " suffix="end,">
+                <foreach collection="list" item="item" index="index" >
+                    when department_id = #{item.departmentId}
+                    then #{item.departmentParent.departmentId}
+                </foreach>
+            </trim>
+        </trim>
+        where department_id in
+        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+            #{item.departmentId}
+        </foreach>
+    </update>
+    <update id="update" parameterType="Department">
+        update t_department
+        <trim prefix="set" suffixOverrides=",">
+            <if test="departmentName != null and departmentName != ''">
+                department_name = #{departmentName},
+            </if>
+            <if test="departmentNumber != null">
+                department_number = #{departmentNumber},
+            </if>
+            <if test="departmentLevel != null">
+                department_level = #{departmentLevel},
+            </if>
+            <if test="departmentParent!= null and departmentParent.departmentId!=null and departmentParent.departmentId!= ''">
+                department_parent = #{departmentParent.departmentId},
+            </if>
+        </trim>
+        where department_id = #{departmentId}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+        delete from t_department where department_id = #{v}
+    </delete>
+
+</mapper>

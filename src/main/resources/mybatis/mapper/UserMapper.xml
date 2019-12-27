@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nnxy.jgz.oasystem.mapper.UserMapper">
+    <!--获取用户列表-->
+    <select id="userList" resultMap="getUserMap">
+        select
+        u.user_id user_id,u.user_account user_account,u.user_password user_password,u.user_name user_name,
+        u.user_create_time user_create_time,u.user_phone user_phone,u.user_email user_email,
+        u.user_head_file_path user_head_file_path,u.user_head_portrait user_head_portrait,u.user_status user_status,
+        d.department_id department_id,d.department_name department_name,d.department_level department_level,
+        d.department_number department_number,d.department_parent department_parent,
+        p.position_id position_id,p.position_name position_name
+        from t_user u
+        left join t_department d
+        on u.department_id = d.department_id
+        left join t_position p
+        on u.position_id = p.position_id
+    </select>
+    <!--通过id获取用户信息-->
+    <select id="getUserByUserId" parameterType="String" resultMap="getUserMap">
+        select
+        u.user_id user_id,u.user_account user_account,u.user_password user_password,u.user_name user_name,
+        u.user_create_time user_create_time,u.user_phone user_phone,u.user_email user_email,
+        u.user_head_file_path user_head_file_path,u.user_head_portrait user_head_portrait,u.user_status user_status,
+        d.department_id department_id,d.department_name department_name,d.department_level department_level,
+        d.department_number department_number,d.department_parent department_parent,
+        p.position_id position_id,p.position_name position_name
+        from t_user u
+        left join t_department d
+        on u.department_id = d.department_id
+        left join t_position p
+        on u.position_id = p.position_id
+        where u.user_id = #{v}
+    </select>
+    <!--通过账号查询账号的所有信息-->
+    <select id="getUserByAccount" parameterType="String" resultMap="getUserMap">
+        select
+        u.user_id user_id,u.user_account user_account,u.user_password user_password,u.user_name user_name,
+        u.user_create_time user_create_time,u.user_phone user_phone,u.user_email user_email,
+        u.user_head_file_path user_head_file_path,u.user_head_portrait user_head_portrait,u.user_status user_status,
+        d.department_id department_id,d.department_name department_name,d.department_level department_level,
+        d.department_number department_number,d.department_parent department_parent,
+        p.position_id position_id,p.position_name position_name
+        from t_user u
+        left join t_department d
+        on u.department_id = d.department_id
+        left join t_position p
+        on u.position_id = p.position_id
+        where u.user_account = #{v}
+    </select>
+    <resultMap id="getUserMap" type="User">
+        <!--基础属性封装-->
+        <id column="user_id" property="userId" javaType="String"/>
+        <result column="user_account" property="userAccount" javaType="String"/>
+        <result column="user_password" property="userPassword" javaType="String"/>
+        <result column="user_name" property="userName" javaType="String"/>
+        <result column="user_create_time" property="userCreateTime" javaType="Long"/>
+        <result column="user_phone" property="userPhone" javaType="String"/>
+        <result column="user_email" property="userEmail" javaType="String"/>
+        <result column="user_head_file_path" property="userHeadFilePath" javaType="String"/>
+        <result column="user_head_portrait" property="userHeadPortrait" javaType="String"/>
+        <result column="user_status" property="userStatus" javaType="Boolean"/>
+        <!--部门信息封装-->
+        <association column="department_id" property="department" javaType="Department">
+            <id column="department_id" property="departmentId" javaType="String"/>
+            <result column="department_name" property="departmentName" javaType="String"/>
+            <result column="department_level" property="departmentLevel" javaType="Integer"/>
+            <result column="department_number" property="departmentNumber" javaType="Integer"/>
+            <association column="department_parent" property="departmentParent" javaType="Department">
+                <id column="department_parent" property="departmentId" javaType="String"/>
+            </association>
+        </association>
+        <!--职位信息封装-->
+        <association column="position_id" property="position" javaType="Position">
+            <id column="position_id" property="positionId" javaType="String"/>
+            <result column="position_name" property="positionName" javaType="String"/>
+        </association>
+    </resultMap>
+
+    <!--通过id修改用户信息-->
+    <update id="updateUserId" parameterType="User">
+        update t_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="userAccount != null and userAccount != ''">
+                user_account = #{userAccount},
+            </if>
+            <if test="userPassword != null and userPassword != ''">
+                user_password = #{userPassword},
+            </if>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="userPhone != null and userPhone != ''">
+                user_phone = #{userPhone},
+            </if>
+            <if test="userEmail != null and userEmail != ''">
+                user_email = #{userEmail},
+            </if>
+            <if test="userHeadFilePath != null and userHeadFilePath != ''">
+                user_head_file_path = #{userHeadFilePath},
+            </if>
+            <if test="userHeadPortrait != null and userHeadPortrait != ''">
+                user_head_portrait = #{userHeadPortrait},
+            </if>
+            <if test="userStatus != null">
+                user_status = #{userStatus},
+            </if>
+            <if test="department!=null and department.departmentId!=null and department.departmentId!=''">
+                department_id = #{department.departmentId},
+            </if>
+            <if test="position!=null and position.positionId!=null and position.positionId!=''">
+                position_id = #{position.positionId},
+            </if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <!--插入用户信息-->
+    <insert id="insert" parameterType="User">
+        insert into
+        t_user(user_id, user_account, user_password, user_name,
+        user_create_time, user_phone, user_email, user_head_file_path,
+        user_head_portrait, department_id, position_id)
+        values (#{userId},#{userAccount},#{userPassword},#{userName} ,
+        #{userCreateTime},#{userPhone},#{userEmail},#{userHeadFilePath},#{userHeadPortrait},
+        <if test="department!=null and department.departmentId!=null and department.departmentId!=''">
+            #{department.departmentId},
+        </if>
+        <if test="department == null">
+            null,
+        </if>
+        <if test="position!=null and position.positionId!=null and position.positionId!=''">
+            #{position.positionId}
+        </if>
+        <if test="position == null">
+            null
+        </if>
+        )
+    </insert>
+
+    <delete id="deleteById" parameterType="String">
+        delete from t_user where user_id = #{v}
+    </delete>
+
+</mapper>

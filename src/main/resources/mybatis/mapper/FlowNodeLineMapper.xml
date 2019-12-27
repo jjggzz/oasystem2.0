@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nnxy.jgz.oasystem.mapper.FlowNodeLineMapper">
+
+    <insert id="insert" parameterType="list">
+        insert into t_flow_line(flow_line_id, flow_id, prev_node_id, next_node_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.flowLineId},#{item.flow.flowId},#{item.prevNode.flowNodeId},#{item.nextNode.flowNodeId})
+        </foreach>
+    </insert>
+
+
+</mapper>

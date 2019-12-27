@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nnxy.jgz.oasystem.mapper.ArticleMapper">
+
+    <select id="articleList" resultMap="articleMap">
+        select article_id,article_title,article_content,article_type,
+        article_create_time, article_comment_count,article_page_view,
+        user_id,article_state
+        from t_article
+        group by article_comment_count desc
+    </select>
+    <resultMap id="articleMap" type="Article">
+        <id column="article_id" property="articleId" javaType="String"/>
+        <result column="article_title" property="articleTitle" javaType="String"/>
+        <result column="article_content" property="articleContent" javaType="String"/>
+        <result column="article_type" property="articleType" javaType="Integer"/>
+        <result column="article_create_time" property="articleCreateTime" javaType="Long"/>
+        <result column="article_comment_count" property="articleCommentCount" javaType="Integer"/>
+        <result column="article_page_view" property="articlePageView" javaType="Integer"/>
+        <result column="article_state" property="articleState" javaType="Integer"/>
+        <association property="user" column="user_id" javaType="User">
+            <id column="user_id" property="userId" javaType="String"/>
+        </association>
+    </resultMap>
+
+    <update id="update" parameterType="Article">
+        update t_article
+        <trim prefix="set" suffixOverrides=",">
+            <if test="articleTitle!=null and articleTitle!=''">
+                article_title = #{articleTitle},
+            </if>
+            <if test="articleContent!=null and articleContent!=''">
+                article_content = #{articleContent},
+            </if>
+            <if test="articleType!=null">
+                article_type = #{articleType},
+            </if>
+            <if test="articleCreateTime!=null">
+                article_create_time = #{articleCreateTime},
+            </if>
+            <if test="articleCommentCount!=null">
+                article_comment_count = #{articleCommentCount},
+            </if>
+            <if test="articlePageView!=null">
+                article_page_view = #{articlePageView},
+            </if>
+            <if test="articleState!=null">
+                article_state = #{articleState},
+            </if>
+            <if test="user!=null and user.userId!=null and user.userId!=''">
+                user_id = #{user.userId},
+            </if>
+        </trim>
+        where article_id = #{articleId}
+    </update>
+
+    <delete id="deleteById" parameterType="String">
+        delete from t_article where article_id = #{v}
+    </delete>
+
+</mapper>

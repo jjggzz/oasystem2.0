@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nnxy.jgz.oasystem.mapper.FlowNodeMapper">
+
+    <insert id="insert" parameterType="list">
+        insert into t_flow_node(flow_node_id, flow_node_name, flow_node_description, flow_id, position_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.flowNodeId},#{item.flowNodeName},#{item.flowNodeDescription},#{item.flow.flowId},#{item.position.positionId})
+        </foreach>
+    </insert>
+
+    <select id="selectFlowNodeByFlowId" parameterType="String" resultType="FlowNode">
+        select flow_node_id,flow_node_name,flow_node_description
+         from t_flow_node
+         where flow_id = #{v}
+    </select>
+
+</mapper>
