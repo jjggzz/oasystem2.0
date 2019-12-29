@@ -94,6 +94,8 @@ public class NoticeServiceImpl implements NoticeService {
         webSocketMessageEntity.setUserId(user.getUserId());
         //设置发送用户名
         webSocketMessageEntity.setUserName(user.getUserName());
+        //设置内容
+        webSocketMessageEntity.setContent("您有一则新通知");
         //设置类型
         webSocketMessageEntity.setType(1);
         webSocketMessageEntity.setIsBroadcast(true);
