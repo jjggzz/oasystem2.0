@@ -1,7 +1,9 @@
 package com.nnxy.jgz.oasystem.controller;
 
+import ch.qos.logback.core.util.FileUtil;
 import com.nnxy.jgz.oasystem.entity.User;
 import com.nnxy.jgz.oasystem.service.UserService;
+import com.nnxy.jgz.oasystem.utils.FileUtils;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +121,7 @@ public class UserController {
             User user = new User();
             user.setUserId(userId);
             //获取文件后缀名
-            String fileLastWord = getFileLastWord(file.getOriginalFilename());
+            String fileLastWord = FileUtils.getFileLastWord(file.getOriginalFilename());
             //随机字符串
             String fileName = UUID.randomUUID().toString().replace("-", "");
             //获取毫秒值
@@ -164,14 +166,5 @@ public class UserController {
     }
 
 
-    /**
-     * 获取文件后缀名
-     * @param fileName
-     * @return
-     */
-    private String getFileLastWord(String fileName){
-        String[] split = fileName.split("\\.");
-        return split[split.length-1];
-    }
 
 }

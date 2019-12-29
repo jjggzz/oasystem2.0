@@ -18,7 +18,7 @@ public class NoticeFile implements Serializable,Cloneable {
     private String fileName;
     private String fileRealityName;
     private String fileAddress;
-    private String fileSize;
+    private Long fileSize;
     /**
      * 外键属性
      */
