@@ -3,6 +3,7 @@ package com.nnxy.jgz.oasystem.controller;
 import com.nnxy.jgz.oasystem.entity.User;
 import com.nnxy.jgz.oasystem.service.UserService;
 import com.nnxy.jgz.oasystem.utils.ErrorEnum;
+import com.nnxy.jgz.oasystem.utils.ProjectConfig;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
 import com.nnxy.jgz.oasystem.utils.SuccessEnum;
 import org.apache.shiro.SecurityUtils;
@@ -14,6 +15,7 @@ import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,10 +28,14 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/authentication")
+@EnableConfigurationProperties(ProjectConfig.class)
 public class AuthenticationController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProjectConfig projectConfig;
 
     /**
      * 用户登录
@@ -61,7 +67,7 @@ public class AuthenticationController {
                     responseMessage.getData().put("userDepartmentName",principal.getDepartment().getDepartmentName());
                 }
                 responseMessage.getData().put("portrait",
-                        "http://localhost:8081"+request.getContextPath()+"/file/headPortraits/"+principal.getUserHeadPortrait());
+                        projectConfig.getServerAddress()+request.getContextPath()+projectConfig.getHeadPortraits()+principal.getUserHeadPortrait());
                 return responseMessage;
             }
             catch (UnknownAccountException e){

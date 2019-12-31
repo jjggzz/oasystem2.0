@@ -1,7 +1,9 @@
 package com.nnxy.jgz.oasystem.service;
 
 import com.nnxy.jgz.oasystem.entity.User;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -54,4 +56,11 @@ public interface UserService {
      * @param userId
      */
     void deleteById(String userId);
+
+    /**
+     * 修改用户头像
+     * @param user
+     * @param file
+     */
+    void update(User user, MultipartFile file) throws IOException;
 }

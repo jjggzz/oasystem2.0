@@ -11,5 +11,89 @@
         (#{noticeId},#{noticeSendTime},#{noticeTitle},#{noticeDescription},#{user.userId},#{noticeType});
     </insert>
 
+    <!--获取未读通知列表-->
+    <select id="getUnreadNoticeListByUserId" parameterType="String" resultMap="noticeListMap">
+        select notice_id,notice_send_time,notice_title,
+        notice_description,notice_type,user_id
+        from t_notice
+        where notice_id
+        not in
+        (select notice_id from t_notice_read where t_notice_read.user_id = #{v})
+        order  by notice_send_time desc
+    </select>
+    <!--获取通知列表-->
+    <select id="getReadNoticeListByUserId" parameterType="String" resultMap="noticeListMap">
+        select notice_id,notice_send_time,notice_title,
+        notice_description,notice_type,user_id
+        from t_notice
+        where notice_id
+        in
+        (select notice_id from t_notice_read where t_notice_read.user_id = #{v})
+        order  by notice_send_time desc
+    </select>
+    <resultMap id="noticeListMap" type="Notice">
+        <id column="notice_id" property="noticeId" javaType="String"/>
+        <result column="notice_send_time" property="noticeSendTime" javaType="Long"/>
+        <result column="notice_title" property="noticeTitle" javaType="String"/>
+        <result column="notice_description" property="noticeDescription" javaType="String"/>
+        <result column="notice_type" property="noticeType" javaType="Integer"/>
+        <association property="user" column="user_id" javaType="User">
+            <id column="user_id" property="userId" javaType="String"/>
+        </association>
+    </resultMap>
+
+    <select id="getNoticeByNoticeId" parameterType="String" resultMap="noticeMap">
+        select
+        n.notice_id notice_id,n.notice_send_time notice_send_time,
+        n.notice_title notice_title,n.notice_description notice_description,
+        n.notice_type notice_type,
+        u.user_id user_id,u.user_name user_name,
+        nf.file_id file_id,nf.file_name file_name,
+        nf.file_reality_name file_reality_name,
+        nf.file_address file_address,nf.file_size file_size
+        from t_notice n
+        left join t_user u
+        on n.user_id = u.user_id
+        left join t_notice_file nf
+        on n.notice_id = nf.notice_id
+        where n.notice_id = #{v}
+    </select>
+    <resultMap id="noticeMap" type="Notice">
+        <id column="notice_id" property="noticeId" javaType="String"/>
+        <result column="notice_send_time" property="noticeSendTime" javaType="Long"/>
+        <result column="notice_title" property="noticeTitle" javaType="String"/>
+        <result column="notice_description" property="noticeDescription" javaType="String"/>
+        <result column="notice_type" property="noticeType" javaType="Integer"/>
+        <association property="user" column="user_id" javaType="User">
+            <id column="user_id" property="userId" javaType="String"/>
+            <result column="user_name" property="userName" javaType="String"/>
+        </association>
+        <collection property="noticeFileList" column="file_id" ofType="NoticeFile">
+            <id column="file_id" property="fileId" javaType="String"/>
+            <result column="file_name" property="fileName" javaType="String"/>
+            <result column="file_reality_name" property="fileRealityName" javaType="String"/>
+            <result column="file_address" property="fileAddress" javaType="String"/>
+            <result column="file_size" property="fileSize" javaType="Long"/>
+        </collection>
+        <collection property="noticeReadList" ofType="NoticeRead"
+                    column="notice_id" select="getNoticeReadByByNoticeId"/>
+    </resultMap>
+    <select id="getNoticeReadByByNoticeId" parameterType="String" resultMap="noticeReadMap">
+        select
+        nr.read_time read_time,
+        u.user_id user_id,u.user_name user_name
+        from t_notice_read  nr
+        left join t_user u
+        on nr.user_id = u.user_id
+        where notice_id = #{v}
+    </select>
+    <resultMap id="noticeReadMap" type="NoticeRead">
+        <result column="read_time" property="readTime" javaType="Long"/>
+        <association column="user_id" property="user" javaType="User">
+            <id column="user_id" property="userId" javaType="String"/>
+            <result column="user_name" property="userName" javaType="String"/>
+        </association>
+    </resultMap>
+
 
 </mapper>

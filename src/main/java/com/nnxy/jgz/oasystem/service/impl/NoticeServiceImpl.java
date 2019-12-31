@@ -9,15 +9,16 @@ import com.nnxy.jgz.oasystem.mapper.NoticeFileMapper;
 import com.nnxy.jgz.oasystem.mapper.NoticeMapper;
 import com.nnxy.jgz.oasystem.service.NoticeService;
 import com.nnxy.jgz.oasystem.utils.FileUtils;
+import com.nnxy.jgz.oasystem.utils.ProjectConfig;
 import com.nnxy.jgz.oasystem.utils.WebSocketMessageEntity;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -25,6 +26,7 @@ import java.util.UUID;
  * CreateTime 2019/12/29 11:04
  * Email 1945282561@qq.com
  */
+@EnableConfigurationProperties(ProjectConfig.class)
 @Service
 public class NoticeServiceImpl implements NoticeService {
 
@@ -34,8 +36,11 @@ public class NoticeServiceImpl implements NoticeService {
     @Autowired
     private NoticeFileMapper noticeFileMapper;
 
+    @Autowired
+    private ProjectConfig projectConfig;
+
     @Override
-    public void addNotice(User user,Notice notice, MultipartFile file)  {
+    public void addNotice(User user,Notice notice, MultipartFile file) throws IOException {
 
         //插入通知
         addNotice(user,notice);
@@ -46,14 +51,14 @@ public class NoticeServiceImpl implements NoticeService {
         //获取毫秒值
         Long time = System.currentTimeMillis();
         //设置文件的存储路径
-        File f = new File("D:/file/notice/" + fileName + time + "." + fileLastWord);
+        File f = new File(projectConfig.getNoticeFileAddress() + fileName + time + "." + fileLastWord);
         NoticeFile noticeFile =new NoticeFile();
         //设置文件id
         noticeFile.setFileId(UUID.randomUUID().toString().replace("-",""));
         //设置文件的真名
         noticeFile.setFileRealityName(fileName + time + "." + fileLastWord);
         //设置文件的存储路径
-        noticeFile.setFileAddress("D:/file/notice/" + fileName + time + "." + fileLastWord);
+        noticeFile.setFileAddress(projectConfig.getNoticeFileAddress() + fileName + time + "." + fileLastWord);
         //设置文件大小
         noticeFile.setFileSize(file.getSize());
         //设置文件的名字
@@ -62,12 +67,9 @@ public class NoticeServiceImpl implements NoticeService {
         noticeFile.setNotice(notice);
         //插入文件
         noticeFileMapper.insert(noticeFile);
-        try {
-            //写入文件
-            file.transferTo(f);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //写入文件
+        file.transferTo(f);
+
     }
 
     @Override
@@ -83,6 +85,22 @@ public class NoticeServiceImpl implements NoticeService {
         noticeMapper.insert(notice);
         //推送消息提示
         pushTips(notice.getUser());
+    }
+
+    @Override
+    public List<Notice> getReadNoticeList(String user) {
+        return  noticeMapper.getReadNoticeListByUserId(user);
+    }
+
+    @Override
+    public List<Notice> getUnReadNoticeList(String userId) {
+
+        return noticeMapper.getUnreadNoticeListByUserId(userId);
+    }
+
+    @Override
+    public Notice getNoticeByNoticeId(String noticeId) {
+        return noticeMapper.getNoticeByNoticeId(noticeId);
     }
 
     /**

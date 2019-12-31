@@ -4,9 +4,12 @@ import ch.qos.logback.core.util.FileUtil;
 import com.nnxy.jgz.oasystem.entity.User;
 import com.nnxy.jgz.oasystem.service.UserService;
 import com.nnxy.jgz.oasystem.utils.FileUtils;
+import com.nnxy.jgz.oasystem.utils.ProjectConfig;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,11 +25,15 @@ import java.util.UUID;
  * CreateTime 2019/12/13 16:26
  * Email 1945282561@qq.com
  */
+@EnableConfigurationProperties(ProjectConfig.class)
 @RestController
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProjectConfig projectConfig;
 
     @GetMapping("/user/userList")
     public ResponseMessage userList(){
@@ -105,7 +112,7 @@ public class UserController {
                 responseMessage.getData().put("userDepartmentName", user.getDepartment().getDepartmentName());
             }
             responseMessage.getData().put("portrait",
-                    "http://localhost:8081" + request.getContextPath() + "/file/headPortraits/" + user.getUserHeadPortrait());
+                    projectConfig.getServerAddress() + request.getContextPath() + projectConfig.getHeadPortraits() + user.getUserHeadPortrait());
             return responseMessage;
         }
         catch (Exception e){
@@ -114,45 +121,31 @@ public class UserController {
         }
     }
 
+    /**
+     * 上传头像
+     * @param userId
+     * @param file
+     * @return
+     */
     @PostMapping("/user/uploadPortrait/{userId}")
     public ResponseMessage uploadPortrait(@PathVariable("userId") String userId,MultipartFile file) {
-        //如果上传的文件不为空
-        if(file != null){
+        try {
             User user = new User();
             user.setUserId(userId);
-            //获取文件后缀名
-            String fileLastWord = FileUtils.getFileLastWord(file.getOriginalFilename());
-            //随机字符串
-            String fileName = UUID.randomUUID().toString().replace("-", "");
-            //获取毫秒值
-            Long time = System.currentTimeMillis();
-            //设置文件的存储路径
-            File f = new File("D:/file/headPortraits/" + fileName + time + "." + fileLastWord);
-            try {
-                //写入文件
-                file.transferTo(f);
-                //设置文件的存储路径位置
-                user.setUserHeadFilePath("D:/file/headPortraits/" + fileName + time + "." + fileLastWord);
-                //设置头像名
-                user.setUserHeadPortrait(fileName + time + "." + fileLastWord);
-                //更新数据库
-                userService.update(user);
-                return new ResponseMessage("0", "上传成功");
-            } catch (Exception e) {
-                e.printStackTrace();
-                //出现异常,若文件存在则删除(针对于写入文件后sql报错)
-                if(f.exists()){
-                    f.delete();
-                }
-                return new ResponseMessage("-1", "上传失败");
-            }
+            //修改头像
+            userService.update(user,file);
+            return new ResponseMessage("0", "上传成功");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new ResponseMessage("-1", "上传失败");
         }
-        else{
-            return new ResponseMessage("-2", "请选择文件");
-        }
-
     }
 
+    /**
+     * 删除用户
+     * @param userId
+     * @return
+     */
     @DeleteMapping("/user/{userId}")
     public ResponseMessage deleteUser(@PathVariable("userId") String userId){
         try {
