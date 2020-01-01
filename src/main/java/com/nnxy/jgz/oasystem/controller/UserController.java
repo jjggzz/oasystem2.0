@@ -150,10 +150,10 @@ public class UserController {
     public ResponseMessage deleteUser(@PathVariable("userId") String userId){
         try {
             userService.deleteById(userId);
-            return new ResponseMessage("0","删除成功");
+            return new ResponseMessage("0","删除用户成功");
         }catch (Exception e){
             e.printStackTrace();
-            return new ResponseMessage("-1","删除失败");
+            return new ResponseMessage("-1","删除用户失败");
         }
 
     }

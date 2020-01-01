@@ -16,4 +16,11 @@ public interface NoticeFileMapper {
      * @param noticeFile
      */
     void insert(NoticeFile noticeFile);
+
+    /**
+     * 获取通知文件通过id
+     * @param fileId
+     * @return
+     */
+    NoticeFile getNoticeFileById(String fileId);
 }

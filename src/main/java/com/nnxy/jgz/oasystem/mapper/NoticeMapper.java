@@ -39,4 +39,17 @@ public interface NoticeMapper {
      * @return
      */
     Notice getNoticeByNoticeId(String noticeId);
+
+    /**
+     * 通过userId获取该用户的通知列表
+     * @param userId
+     * @return
+     */
+    List<Notice> getUserNoticeListByUserId(String userId);
+
+    /**
+     * 通过id删除通知
+     * @param noticeId
+     */
+    void deleteById(String noticeId);
 }

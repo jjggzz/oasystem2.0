@@ -50,4 +50,17 @@ public interface NoticeService {
      * @return
      */
     Notice getNoticeByNoticeId(String noticeId);
+
+    /**
+     * 获取用户发送的通知列表
+     * @param userId
+     * @return
+     */
+    List<Notice> getUserNoticeList(String userId);
+
+    /**
+     * 通过id删除通知
+     * @param noticeId
+     */
+    void deleteById(String noticeId);
 }

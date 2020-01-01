@@ -11,6 +11,14 @@
         (#{noticeId},#{noticeSendTime},#{noticeTitle},#{noticeDescription},#{user.userId},#{noticeType});
     </insert>
 
+    <!--获取用户发送的通知列表-->
+    <select id="getUserNoticeListByUserId" parameterType="String" resultMap="noticeListMap">
+        select notice_id,notice_send_time,notice_title,
+        notice_description,notice_type,user_id
+        from t_notice
+        where user_id = #{v}
+        order  by notice_send_time desc
+    </select>
     <!--获取未读通知列表-->
     <select id="getUnreadNoticeListByUserId" parameterType="String" resultMap="noticeListMap">
         select notice_id,notice_send_time,notice_title,
@@ -95,5 +103,8 @@
         </association>
     </resultMap>
 
+    <delete id="deleteById" parameterType="String">
+        delete from t_notice where notice_id = #{v}
+    </delete>
 
 </mapper>

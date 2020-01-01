@@ -103,6 +103,16 @@ public class NoticeServiceImpl implements NoticeService {
         return noticeMapper.getNoticeByNoticeId(noticeId);
     }
 
+    @Override
+    public List<Notice> getUserNoticeList(String userId) {
+        return noticeMapper.getUserNoticeListByUserId(userId);
+    }
+
+    @Override
+    public void deleteById(String noticeId) {
+        noticeMapper.deleteById(noticeId);
+    }
+
     /**
      * 消息推送
      */

@@ -142,4 +142,41 @@ public class NoticeController {
         }
     }
 
+    /**
+     * 获取该用户所发送的通知列表
+     * @param userId
+     * @return
+     */
+    @GetMapping("/notice/userNoticeList/{userId}")
+    public ResponseMessage getUserNoticeList(@PathVariable("userId") String userId){
+        try {
+            List<Notice> noticeList = noticeService.getUserNoticeList(userId);
+            ResponseMessage responseMessage = new ResponseMessage("0","获取未读通知列表成功");
+            responseMessage.getData().put("noticeList",noticeList);
+            return responseMessage;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return new ResponseMessage("-1","获取未读通知列表失败");
+        }
+    }
+
+    /**
+     * 根据id删除通知
+     * @param noticeId
+     * @return
+     */
+    @DeleteMapping("/notice/{noticeId}")
+    public ResponseMessage delNotice(@PathVariable("noticeId") String noticeId){
+        try {
+            noticeService.deleteById(noticeId);
+            return new ResponseMessage("0","删除通知成功");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return new ResponseMessage("-1","删除通知失败");
+        }
+
+    }
+
 }

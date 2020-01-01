@@ -11,5 +11,13 @@
         (#{fileId},#{fileName},#{fileRealityName},#{fileAddress},#{fileSize},#{notice.noticeId});
     </insert>
 
+    <select id="getNoticeFileById" parameterType="String" resultType="NoticeFile">
+        select
+        file_id,file_name,file_reality_name,file_address,notice_id,file_size
+        from t_notice_file
+        where file_id = #{v}
+    </select>
+
+
 
 </mapper>
