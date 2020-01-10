@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nnxy.jgz.oasystem.mapper.UserFileMapper">
+
+    <insert id="insert" parameterType="NoticeFile">
+        insert into t_user_file
+        (file_id, file_name, file_reality_name, file_address, file_size, user_id,upload_time)
+        values
+        (#{fileId},#{fileName},#{fileRealityName},#{fileAddress},#{fileSize},#{user.userId},#{uploadTime});
+    </insert>
+
+    <select id="getUserFileListByUserId" parameterType="String" resultMap="userFileMap">
+        select file_id,file_name,
+        file_reality_name,file_address,
+        file_size,upload_time,user_id
+        from t_user_file
+        where user_id = #{v}
+        order by upload_time desc
+    </select>
+    <select id="getUserFileByFileId" parameterType="String" resultMap="userFileMap">
+        select file_id,file_name,
+        file_reality_name,file_address,
+        file_size,upload_time,user_id
+        from t_user_file
+        where file_id = #{v}
+    </select>
+    <resultMap id="userFileMap" type="UserFile">
+        <id column="file_id" property="fileId" javaType="String"/>
+        <result column="file_name" property="fileName" javaType="String"/>
+        <result column="file_reality_name" property="fileRealityName" javaType="String"/>
+        <result column="file_address" property="fileAddress" javaType="String"/>
+        <result column="file_size" property="fileSize" javaType="Long"/>
+        <result column="upload_time" property="uploadTime" javaType="Long"/>
+        <association property="user" column="user_id" javaType="User">
+            <id column="user_id" property="userId" javaType="String"/>
+        </association>
+    </resultMap>
+
+    <delete id="deleteUserFileByFileId" parameterType="String">
+        delete from t_user_file where file_id = #{v}
+    </delete>
+
+
+
+</mapper>

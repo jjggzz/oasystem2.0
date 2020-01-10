@@ -36,11 +36,15 @@ public class UserController {
     private ProjectConfig projectConfig;
 
     @GetMapping("/user/userList")
-    public ResponseMessage userList(){
+    public ResponseMessage userList(HttpServletRequest request){
         try {
             List<User> userList = userService.userList();
             for (User user : userList) {
                 user.setUserPassword("");
+            }
+            for (User user : userList) {
+                user.setUserHeadPortrait(projectConfig.getServerAddress()+request.getContextPath()+
+                        projectConfig.getHeadPortraits()+user.getUserHeadPortrait());
             }
             ResponseMessage responseMessage = new ResponseMessage("0", "获取用户列表成功");
             responseMessage.getData().put("userList", userList);

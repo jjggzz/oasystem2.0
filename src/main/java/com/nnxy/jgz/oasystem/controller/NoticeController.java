@@ -126,7 +126,7 @@ public class NoticeController {
         try {
            Notice notice = noticeService.getNoticeByNoticeId(noticeId);
            //封装文件路径
-           if(notice.getNoticeFileList().size()>0){
+           if(notice.getNoticeFileList()!= null && notice.getNoticeFileList().size()>0){
                for (NoticeFile noticeFile :notice.getNoticeFileList()) {
                    noticeFile.setFileAddress(projectConfig.getServerAddress() +
                            request.getContextPath() + projectConfig.getNoticeFile() + noticeFile.getFileRealityName());

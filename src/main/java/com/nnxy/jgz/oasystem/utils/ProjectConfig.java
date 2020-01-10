@@ -20,4 +20,6 @@ public class ProjectConfig {
     private String noticeFileAddress;
     private String headPortraits;
     private String headPortraitsAddress;
+    private String userFile;
+    private String userFileAddress;
 }

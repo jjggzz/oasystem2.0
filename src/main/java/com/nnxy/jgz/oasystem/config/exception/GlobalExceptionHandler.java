@@ -7,6 +7,9 @@ import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+
 
 /**
  * 全局异常处理
@@ -14,8 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * CreateTime 2019/12/5 9:36
  * Email 1945282561@qq.com
  */
-@ControllerAdvice
-@ResponseBody
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
 
@@ -37,4 +39,12 @@ public class GlobalExceptionHandler {
         return new ResponseMessage(ErrorEnum.E_UNAUTHENTICATED);
     }
 
+    /**
+     * 文件超过大小调用此全局处理
+     * @return
+     */
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseMessage fileSizeLimitExceeded(){
+        return new ResponseMessage("-1","文件超过最大限制");
+    }
 }

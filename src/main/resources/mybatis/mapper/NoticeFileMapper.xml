@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.nnxy.jgz.oasystem.mapper.NoticeFileMapper">
 
-    <insert id="insert" parameterType="Notice">
+    <insert id="insert" parameterType="NoticeFile">
         insert into t_notice_file
         (file_id, file_name, file_reality_name, file_address, file_size, notice_id)
         values
@@ -17,6 +17,33 @@
         from t_notice_file
         where file_id = #{v}
     </select>
+
+    <select id="noticeFileList" resultMap="noticeFileMap">
+        select nf.file_id file_id,nf.file_name file_name,
+        nf.file_reality_name file_reality_name,nf.file_address file_address,
+        nf.file_size file_size,n.notice_id notice_id,n.notice_title notice_title,
+        n.notice_send_time notice_send_time
+        from t_notice_file nf
+        left join t_notice n
+        on nf.notice_id = n.notice_id
+    </select>
+    <resultMap id="noticeFileMap" type="NoticeFile">
+        <id column="file_id" property="fileId" javaType="String"/>
+        <result column="file_name" property="fileName" javaType="String"/>
+        <result column="file_reality_name" property="fileRealityName" javaType="String"/>
+        <result column="file_address" property="fileAddress" javaType="String"/>
+        <result column="file_size" property="fileSize" javaType="Long"/>
+        <association property="notice" column="notice_id" javaType="Notice">
+            <id column="notice_id" property="noticeId" javaType="String"/>
+            <result column="notice_title" property="noticeTitle" javaType="String"/>
+            <result column="notice_send_time" property="noticeSendTime" javaType="Long"/>
+        </association>
+    </resultMap>
+
+    <delete id="deleteNoticeFileById" parameterType="String">
+        delete from t_notice_file where file_id = #{v}
+    </delete>
+
 
 
 

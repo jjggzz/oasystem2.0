@@ -7,6 +7,7 @@ import com.nnxy.jgz.oasystem.entity.NoticeFile;
 import com.nnxy.jgz.oasystem.entity.User;
 import com.nnxy.jgz.oasystem.mapper.NoticeFileMapper;
 import com.nnxy.jgz.oasystem.mapper.NoticeMapper;
+import com.nnxy.jgz.oasystem.service.NoticeFileService;
 import com.nnxy.jgz.oasystem.service.NoticeService;
 import com.nnxy.jgz.oasystem.utils.FileUtils;
 import com.nnxy.jgz.oasystem.utils.ProjectConfig;
@@ -39,9 +40,11 @@ public class NoticeServiceImpl implements NoticeService {
     @Autowired
     private ProjectConfig projectConfig;
 
+    @Autowired
+    private NoticeFileService noticeFileService;
+
     @Override
     public void addNotice(User user,Notice notice, MultipartFile file) throws IOException {
-
         //插入通知
         addNotice(user,notice);
         //获取文件后缀名
@@ -110,6 +113,16 @@ public class NoticeServiceImpl implements NoticeService {
 
     @Override
     public void deleteById(String noticeId) {
+        //获取被删通知的信息
+        Notice noticeByNoticeId = noticeMapper.getNoticeByNoticeId(noticeId);
+        if(noticeByNoticeId.getNoticeFileList()!=null &&
+                noticeByNoticeId.getNoticeFileList().size()!=0){
+            //如果文件列表不为空
+            //删除文件
+            for (NoticeFile noticeFile:noticeByNoticeId.getNoticeFileList()) {
+                noticeFileService.delFile(noticeFile.getFileId());
+            }
+        }
         noticeMapper.deleteById(noticeId);
     }
 

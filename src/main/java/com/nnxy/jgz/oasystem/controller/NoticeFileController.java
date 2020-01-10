@@ -2,13 +2,17 @@ package com.nnxy.jgz.oasystem.controller;
 
 import com.nnxy.jgz.oasystem.entity.NoticeFile;
 import com.nnxy.jgz.oasystem.service.NoticeFileService;
+import com.nnxy.jgz.oasystem.utils.FileUtils;
+import com.nnxy.jgz.oasystem.utils.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.List;
 
 /**
  * 通知文件的控制层
@@ -34,47 +38,46 @@ public class NoticeFileController {
             NoticeFile noticeFile = noticeFileService.getNoticeFileById(fileId);
             //获取要下载文件在硬盘中存储的位置
             String fileAddress = noticeFile.getFileAddress();
-            File file = new File(fileAddress);
-            if (file.exists()){
-                //如果文件存在则下载
-                byte[] buffer = new byte[1024];
-                FileInputStream fis = null;
-                BufferedInputStream bis = null;
-                try {
-                    fis = new FileInputStream(file);
-                    bis = new BufferedInputStream(fis);
-                    //从响应中拿到输出流对象
-                    OutputStream os = response.getOutputStream();
-                    int i = bis.read(buffer);
-                    while (i != -1){
-                        os.write(buffer,0,i);
-                        //循环读取文件内容
-                        i = bis.read(buffer);
-                    }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }finally {
-                    //关闭流
-                    if (bis != null) {
-                        try {
-                            bis.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    if (fis != null) {
-                        try {
-                            fis.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
+            //文件下载
+            FileUtils.downloadFile(fileAddress,response);
         }catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    /**
+     * 删除文件
+     * @param fileId
+     * @return
+     */
+    @DeleteMapping("/noticeFile/{fileId}")
+    public ResponseMessage delFile(@PathVariable("fileId") String fileId){
+        try {
+            noticeFileService.delFile(fileId);
+            return new ResponseMessage("0","删除成功");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseMessage("-1","删除失败");
+        }
+    }
+
+    /**
+     * 获取文件列表
+     * @return
+     */
+    @GetMapping("/noticeFile/noticeFileList")
+    public ResponseMessage fileList(){
+        try {
+            List<NoticeFile> noticeFileList = noticeFileService.noticeFileList();
+            ResponseMessage responseMessage = new ResponseMessage("0","获取成功");
+            responseMessage.getData().put("noticeFileList",noticeFileList);
+            return responseMessage;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return new ResponseMessage("-1","获取失败");
+        }
 
     }
+
 }
