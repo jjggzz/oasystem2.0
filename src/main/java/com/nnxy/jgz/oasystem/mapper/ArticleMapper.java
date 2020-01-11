@@ -29,4 +29,17 @@ public interface ArticleMapper {
      * @param articleId
      */
     void deleteById(String articleId);
+
+    /**
+     * 通过文章类型获取文章列表
+     * @param articleType
+     * @return
+     */
+    List<Article> articleListByArticleType(Integer articleType);
+
+    /**
+     * 插入信息
+     * @param article
+     */
+    void insert(Article article);
 }

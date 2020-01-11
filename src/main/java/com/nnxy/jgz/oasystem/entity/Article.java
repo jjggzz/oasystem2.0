@@ -23,6 +23,7 @@ public class Article implements Serializable,Cloneable {
     private Integer articleCommentCount;
     private Integer articlePageView;
     private Integer articleState;
+    private String articleFile;
     /**
      * 外键属性
      */

@@ -1,7 +1,9 @@
 package com.nnxy.jgz.oasystem.service;
 
 import com.nnxy.jgz.oasystem.entity.Article;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -27,4 +29,18 @@ public interface ArticleService {
      * @param articleId
      */
     void delete(String articleId);
+
+    /**
+     * 根据文章类型获取文章列表
+     * @param articleType
+     * @return
+     */
+    List<Article> articleListByArticleType(Integer articleType);
+
+    /**
+     * 插入文章
+     * @param article
+     * @param file
+     */
+    void insert(Article article, MultipartFile file) throws IOException;
 }
