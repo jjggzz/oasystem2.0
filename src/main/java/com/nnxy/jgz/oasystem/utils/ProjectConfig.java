@@ -16,6 +16,7 @@ import org.springframework.context.annotation.PropertySource;
 @Data
 public class ProjectConfig {
     private String serverAddress;
+    private String projectName;
     private String noticeFile;
     private String noticeFileAddress;
     private String headPortraits;

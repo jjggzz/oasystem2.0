@@ -46,6 +46,23 @@ public class ArticleController {
      * 获取文章列表
      * @return
      */
+    @GetMapping("/article/userArticle/{userId}")
+    public ResponseMessage articleList(@PathVariable("userId")  String userId){
+        try {
+            List<Article> articleList = articleService.articleListByUserId(userId);
+            ResponseMessage responseMessage = new ResponseMessage("0","获取文章列表成功");
+            responseMessage.getData().put("articleList",articleList);
+            return responseMessage;
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseMessage("-1","获取失败");
+        }
+    }
+
+    /**
+     * 获取文章列表
+     * @return
+     */
     @GetMapping("/article/articleList/{articleType}")
     public ResponseMessage articleList(@PathVariable("articleType") Integer articleType){
         try {
@@ -58,6 +75,8 @@ public class ArticleController {
             return new ResponseMessage("-1","获取失败");
         }
     }
+
+
     /**
      * 修改文章
      * @param articleId
@@ -90,6 +109,25 @@ public class ArticleController {
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseMessage("-1","删除失败");
+        }
+    }
+
+    /**
+     * 获取文章详情
+     * @param articleId
+     * @return
+     */
+    @GetMapping("/article/{articleId}")
+    public ResponseMessage getArticle(@PathVariable("articleId") String articleId){
+        try {
+            Article article = articleService.select(articleId);
+            ResponseMessage responseMessage = new ResponseMessage("0","获取成功");
+            responseMessage.getData().put("article",article);
+            return responseMessage;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return new ResponseMessage("-1","获取文章详情失败");
         }
     }
 

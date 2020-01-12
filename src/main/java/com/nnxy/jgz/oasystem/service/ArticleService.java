@@ -41,6 +41,21 @@ public interface ArticleService {
      * 插入文章
      * @param article
      * @param file
+     * @throws IOException
      */
     void insert(Article article, MultipartFile file) throws IOException;
+
+    /**
+     * 获取用户的文章列表
+     * @param userId
+     * @return
+     */
+    List<Article> articleListByUserId(String userId);
+
+    /**
+     * 获取文章详情
+     * @param articleId
+     * @return
+     */
+    Article select(String articleId);
 }

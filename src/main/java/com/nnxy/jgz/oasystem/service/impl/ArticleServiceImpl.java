@@ -1,7 +1,10 @@
 package com.nnxy.jgz.oasystem.service.impl;
 
 import com.nnxy.jgz.oasystem.entity.Article;
+import com.nnxy.jgz.oasystem.entity.Comment;
+import com.nnxy.jgz.oasystem.entity.User;
 import com.nnxy.jgz.oasystem.mapper.ArticleMapper;
+import com.nnxy.jgz.oasystem.mapper.CommentMapper;
 import com.nnxy.jgz.oasystem.service.ArticleService;
 import com.nnxy.jgz.oasystem.utils.FileUtils;
 import com.nnxy.jgz.oasystem.utils.ProjectConfig;
@@ -32,6 +35,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired
     private ProjectConfig projectConfig;
 
+    @Autowired
+    private CommentMapper commentMapper;
+
     @Override
     public List<Article> articleList() {
         return articleMapper.articleList();
@@ -44,7 +50,19 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Override
     public void delete(String articleId) {
-        articleMapper.deleteById(articleId);
+        //查询
+        Article article = articleMapper.selectByArticleId(articleId);
+        if(article!=null){
+            //删除记录
+            articleMapper.deleteById(articleId);
+            if(article.getArticleFile()!=null){
+                File file = new File(projectConfig.getArticleFileAddress()+article.getArticleFile());
+                //删除文件
+                if (file.exists()){
+                    file.delete();
+                }
+            }
+        }
     }
 
     @Override
@@ -77,6 +95,39 @@ public class ArticleServiceImpl implements ArticleService {
         articleMapper.insert(article);
         //写入文件
         file.transferTo(f);
+    }
+
+    @Override
+    public List<Article> articleListByUserId(String userId) {
+        return articleMapper.articleListByUserId(userId);
+    }
+
+    @Override
+    public Article select(String articleId) {
+        //获取文章
+        Article article = articleMapper.selectByArticleId(articleId);
+        if(article!=null){
+            //如果文章存在
+           List<Comment> commentList = commentMapper.selectCommentByArticleId(article.getArticleId());
+           article.setCommentList(commentList);
+        }
+        //设置文章文件路径
+        article.setArticleFile(projectConfig.getServerAddress()+projectConfig.getProjectName()+projectConfig.getArticleFile()+article.getArticleFile());
+        //设置发送者的头像
+        article.getUser().setUserHeadPortrait(projectConfig.getServerAddress()+projectConfig.getProjectName()+
+                projectConfig.getHeadPortraits()+article.getUser().getUserHeadPortrait());
+        //设置评论人员的头像
+        for (Comment comment:article.getCommentList()) {
+            //设置一级评论者的头像
+            comment.getUser().setUserHeadPortrait(projectConfig.getServerAddress()+projectConfig.getProjectName()+
+                    projectConfig.getHeadPortraits()+comment.getUser().getUserHeadPortrait());
+            //设置二级评论者的头像
+            for (Comment c:comment.getCommentChildList()) {
+                c.getUser().setUserHeadPortrait(projectConfig.getServerAddress()+projectConfig.getProjectName()+
+                        projectConfig.getHeadPortraits()+c.getUser().getUserHeadPortrait());
+            }
+        }
+        return article;
     }
 
     /**

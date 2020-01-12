@@ -32,6 +32,25 @@
         where article_type = #{v}
         order by article_create_time desc
     </select>
+    <select id="articleListByUserId" parameterType="String" resultMap="articleMap">
+        select article_id,article_title,article_content,article_type,
+        article_create_time, article_comment_count,article_page_view,article_file,
+        t_user.user_id user_id,t_user.user_name user_name,article_state
+        from t_article
+        left join t_user
+        on t_article.user_id = t_user.user_id
+        where t_article.user_id = #{v}
+        order by article_create_time desc
+    </select>
+    <select id="selectByArticleId" parameterType="String" resultMap="articleMap">
+        select article_id,article_title,article_content,article_type,
+        article_create_time, article_comment_count,article_page_view,article_file,
+        t_user.user_id user_id,t_user.user_name user_name,t_user.user_head_portrait user_head_portrait,article_state
+        from t_article
+        left join t_user
+        on t_article.user_id = t_user.user_id
+        where article_id = #{v}
+    </select>
     <resultMap id="articleMap" type="Article">
         <id column="article_id" property="articleId" javaType="String"/>
         <result column="article_title" property="articleTitle" javaType="String"/>
@@ -45,6 +64,7 @@
         <association property="user" column="user_id" javaType="User">
             <id column="user_id" property="userId" javaType="String"/>
             <result column="user_name" property="userName" javaType="String"/>
+            <result column="user_head_portrait" property="userHeadPortrait" javaType="String"/>
         </association>
     </resultMap>
 

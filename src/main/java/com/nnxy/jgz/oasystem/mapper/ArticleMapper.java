@@ -42,4 +42,18 @@ public interface ArticleMapper {
      * @param article
      */
     void insert(Article article);
+
+    /**
+     * 获取用户的文章列表
+     * @param userId
+     * @return
+     */
+    List<Article> articleListByUserId(String userId);
+
+    /**
+     * 通过文章id查询文章
+     * @param articleId
+     * @return
+     */
+    Article selectByArticleId(String articleId);
 }

@@ -3,6 +3,7 @@ package com.nnxy.jgz.oasystem.entity;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author JGZ
@@ -23,6 +24,7 @@ public class Comment implements Serializable,Cloneable {
      */
     private User user;
     private Article article;
+    private List<Comment> commentChildList;
 
     @Override
     public Object clone() throws CloneNotSupportedException {
