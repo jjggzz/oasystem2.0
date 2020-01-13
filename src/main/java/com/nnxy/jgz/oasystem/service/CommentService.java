@@ -14,4 +14,10 @@ public interface CommentService {
      * @param comment
      */
     void insert(Comment comment);
+
+    /**
+     * 通过id删除评论
+     * @param commentId
+     */
+    void deleteCommentByCommentId(String commentId);
 }

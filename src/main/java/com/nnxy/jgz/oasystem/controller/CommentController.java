@@ -4,9 +4,7 @@ import com.nnxy.jgz.oasystem.entity.Comment;
 import com.nnxy.jgz.oasystem.service.CommentService;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 评论控制层
@@ -37,4 +35,20 @@ public class CommentController {
         }
     }
 
+    /**
+     * 删除评论
+     * @param commentId
+     * @return
+     */
+    @DeleteMapping("/comment/{commentId}")
+    public ResponseMessage delComment(@PathVariable("commentId") String commentId){
+        try {
+            commentService.deleteCommentByCommentId(commentId);
+            return new ResponseMessage("0","删除成功");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return new ResponseMessage("-1","删除失败");
+        }
+    }
 }

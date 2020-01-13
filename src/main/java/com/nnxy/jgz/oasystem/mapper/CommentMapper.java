@@ -25,4 +25,30 @@ public interface CommentMapper {
      * @param comment
      */
     void insert(Comment comment);
+
+    /**
+     * 通过父评论来查询评论列表
+     * @param commentParent
+     * @return
+     */
+    List<Comment> selectCommentByParent(String commentParent);
+
+    /**
+     * 查询评论所属的文章
+     * @param commentId
+     * @return
+     */
+    String selectArticleIdByCommentId(String commentId);
+
+    /**
+     * 通过id删除评论
+     * @param commentId
+     */
+    void delete(String commentId);
+
+    /**
+     * 根据父评论删除子评论
+     * @param commentId
+     */
+    void deleteByParent(String commentId);
 }

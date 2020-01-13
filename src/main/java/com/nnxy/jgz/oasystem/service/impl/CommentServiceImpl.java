@@ -8,6 +8,7 @@ import com.nnxy.jgz.oasystem.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -35,6 +36,24 @@ public class CommentServiceImpl implements CommentService {
         //修改文章信息
         Article article = articleMapper.selectByArticleId(comment.getArticle().getArticleId());
         article.setArticleCommentCount(article.getArticleCommentCount()+1);
+        articleMapper.update(article);
+    }
+
+    @Override
+    public void deleteCommentByCommentId(String commentId) {
+        //查询该评论的文章id
+        String articleId = commentMapper.selectArticleIdByCommentId(commentId);
+        //查询该评论的子评论条数
+        List<Comment> commentList = commentMapper.selectCommentByParent(commentId);
+        //删除
+        commentMapper.delete(commentId);
+        if(commentList.size()>0){
+            commentMapper.deleteByParent(commentId);
+        }
+        //修改文章信息
+        Article article = articleMapper.selectByArticleId(articleId);
+        //评论数减去1 再减去该评论的所有子评论数
+        article.setArticleCommentCount((article.getArticleCommentCount()-1-commentList.size()));
         articleMapper.update(article);
     }
 }

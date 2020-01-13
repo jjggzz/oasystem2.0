@@ -53,5 +53,16 @@
         </association>
     </resultMap>
 
+    <select id="selectArticleIdByCommentId" parameterType="String" resultType="String">
+        select article_id from t_comment where comment_id = #{v}
+    </select>
+
+    <delete id="delete" parameterType="String">
+        delete from t_comment where comment_id = #{v}
+    </delete>
+    <delete id="deleteByParent" parameterType="String">
+        delete from t_comment where comment_parent = #{v}
+    </delete>
+
 
 </mapper>
