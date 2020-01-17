@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nnxy.jgz.oasystem.mapper.ApplyMapper">
+
+    <insert id="insert" parameterType="Apply">
+        insert into t_apply(apply_id, apply_title, apply_description,
+        apply_state, flow_id, user_id)
+        values (#{applyId},#{applyTitle},#{applyDescription},#{applyState},
+        #{flow.flowId},#{user.userId})
+    </insert>
+
+    <select id="getApplyByUserId" parameterType="String" resultMap="applyListMap">
+        select
+        a.apply_id apply_id,a.apply_title apply_title,a.apply_description apply_description,
+        a.apply_submit_time apply_submit_time,a.apply_state apply_state,a.flow_id flow_id,
+        f.flow_name flow_name,a.apply_current_node apply_current_node,fn.flow_node_name flow_node_name
+        from t_apply a
+        left join t_flow f
+        on a.flow_id = f.flow_id
+        left join t_flow_node fn
+        on a.apply_current_node = fn.flow_node_id
+        where user_id = #{v}
+    </select>
+    <select id="select" parameterType="String" resultMap="applyMap">
+        select
+        a.apply_id apply_id,a.apply_title apply_title,a.apply_description apply_description,
+        a.apply_submit_time apply_submit_time,a.apply_state apply_state,a.flow_id flow_id,
+        f.flow_name flow_name,a.apply_current_node apply_current_node,fn.flow_node_name flow_node_name,
+        u.user_id user_id,u.user_name user_name,
+        af.file_id file_id,af.file_name file_name,af.file_address file_address,
+        af.file_reality_name file_reality_name,af.file_size file_size
+        from t_apply a
+        left join t_flow f
+        on a.flow_id = f.flow_id
+        left join t_flow_node fn
+        on a.apply_current_node = fn.flow_node_id
+        left join t_user u
+        on a.user_id = u.user_id
+        left join t_apply_file af
+        on a.apply_id = af.apply_id
+        where a.apply_id = #{v}
+    </select>
+    <resultMap id="applyListMap" type="Apply">
+        <id column="apply_id" property="applyId" javaType="String"/>
+        <result column="apply_title" property="applyTitle" javaType="String"/>
+        <result column="apply_description" property="applyDescription" javaType="String"/>
+        <result column="apply_submit_time" property="applySubmitTime" javaType="Long"/>
+        <result column="apply_state" property="applyState" javaType="Integer"/>
+        <association property="flow" column="flow_id" javaType="Flow">
+            <id column="flow_id" property="flowId" javaType="String"/>
+            <result column="flow_name" property="flowName" javaType="String"/>
+        </association>
+        <association property="applyCurrentNode" column="apply_current_node" javaType="FlowNode">
+            <id column="apply_current_node" property="flowNodeId" javaType="String"/>
+            <result column="flow_node_name" property="flowNodeName" javaType="String"/>
+        </association>
+    </resultMap>
+    <resultMap id="applyMap" type="Apply">
+        <id column="apply_id" property="applyId" javaType="String"/>
+        <result column="apply_title" property="applyTitle" javaType="String"/>
+        <result column="apply_description" property="applyDescription" javaType="String"/>
+        <result column="apply_submit_time" property="applySubmitTime" javaType="Long"/>
+        <result column="apply_state" property="applyState" javaType="Integer"/>
+        <association property="user" column="user_id" javaType="User">
+            <id column="user_id" property="userId" javaType="String"/>
+            <result column="user_name" property="userName" javaType="String"/>
+        </association>
+        <association property="flow" column="flow_id" javaType="Flow">
+            <id column="flow_id" property="flowId" javaType="String"/>
+            <result column="flow_name" property="flowName" javaType="String"/>
+        </association>
+        <association property="applyCurrentNode" column="apply_current_node" javaType="FlowNode">
+            <id column="apply_current_node" property="flowNodeId" javaType="String"/>
+            <result column="flow_node_name" property="flowNodeName" javaType="String"/>
+        </association>
+        <collection property="fileList" column="file_id" ofType="ApplyFile">
+            <id column="file_id" property="fileId" javaType="String"/>
+            <result column="file_name" property="fileName" javaType="String"/>
+            <result column="file_address" property="fileAddress" javaType="String"/>
+            <result column="file_reality_name" property="fileRealityName" javaType="String"/>
+            <result column="file_size" property="fileSize" javaType="Long"/>
+        </collection>
+    </resultMap>
+
+    <delete id="delete" parameterType="String">
+        delete from t_apply where apply_id = #{v}
+    </delete>
+
+
+</mapper>

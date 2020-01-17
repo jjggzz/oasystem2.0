@@ -25,4 +25,6 @@ public class ProjectConfig {
     private String userFileAddress;
     private String articleFile;
     private String articleFileAddress;
+    private String applyFile;
+    private String applyFileAddress;
 }

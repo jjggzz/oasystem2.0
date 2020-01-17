@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nnxy.jgz.oasystem.mapper.ApplyFileMapper">
+
+
+    <insert id="insert" parameterType="ApplyFile">
+        insert into t_apply_file (file_id, file_name, file_reality_name,
+        file_address, file_size, apply_id)
+        values (#{fileId},#{fileName},#{fileRealityName},
+        #{fileAddress},#{fileSize},#{apply.applyId})
+    </insert>
+
+    <delete id="deleteByList" parameterType="List">
+        delete from t_apply_file where file_id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.fileId}
+        </foreach>
+    </delete>
+
+
+</mapper>
