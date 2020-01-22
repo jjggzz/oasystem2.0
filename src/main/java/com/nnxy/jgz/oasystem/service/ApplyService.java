@@ -33,4 +33,30 @@ public interface ApplyService {
      * @param applyId
      */
     void deleteByApplyId(String applyId);
+
+    /**
+     * 修改任务
+     * @param apply
+     */
+    void alterApply(Apply apply);
+
+    /**
+     * 获取任务信息
+     * @param applyId
+     * @return
+     */
+    Apply getApply(String applyId);
+
+    /**
+     * 获取用户能够审批的任务列表
+     * @param userId
+     * @return
+     */
+    List<Apply> getUserExamineApplyList(String userId);
+
+    /**
+     * 修改任务
+     * @param apply
+     */
+    void update(Apply apply);
 }

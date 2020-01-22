@@ -32,4 +32,9 @@ public class ApplyFileServiceImpl implements ApplyFileService {
             }
         }
     }
+
+    @Override
+    public ApplyFile getApplyFileById(String fileId) {
+        return applyFileMapper.selectById(fileId);
+    }
 }

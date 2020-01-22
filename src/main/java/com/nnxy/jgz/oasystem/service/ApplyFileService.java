@@ -15,4 +15,11 @@ public interface ApplyFileService {
      * @param fileList
      */
     void deleteByList(List<ApplyFile> fileList);
+
+    /**
+     * 通过id获取任务文件
+     * @param fileId
+     * @return
+     */
+    ApplyFile getApplyFileById(String fileId);
 }

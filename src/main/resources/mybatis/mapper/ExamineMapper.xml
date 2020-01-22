@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nnxy.jgz.oasystem.mapper.ExamineMapper">
+
+    <insert id="insert" parameterType="Examine">
+        insert into
+        t_examine(examine_id, apply_id, flow_node_id, user_id, user_name,
+        examine_status, examine_info, examine_date)
+        values (#{examineId},#{apply.applyId},#{flowNode.flowNodeId},#{user.userId},#{userName},
+        #{examineStatus},#{examineInfo},#{examineDate})
+    </insert>
+
+    <select id="getExamineListByApplyId" parameterType="String" resultMap="examineListMap">
+        select e.examine_id examine_id,e.user_name user_name,
+        e.examine_status examine_status,e.examine_info examine_info,
+        e.examine_date examine_date,e.apply_id apply_id,
+        e.flow_node_id flow_node_id,fn.flow_node_name flow_node_name,
+        e.user_id user_id,u.user_name u_user_name
+        from t_examine e
+        left join t_user u
+        on e.user_id = u.user_id
+        left join t_flow_node fn
+        on e.flow_node_id = fn.flow_node_id
+        where e.apply_id = #{v}
+        order by examine_date
+    </select>
+    <select id="getExamineListByUserId" parameterType="String" resultMap="examineListMap">
+        select e.examine_id examine_id,e.user_name user_name,
+        e.examine_status examine_status,e.examine_info examine_info,
+        e.examine_date examine_date,e.apply_id apply_id,
+        e.flow_node_id flow_node_id,fn.flow_node_name flow_node_name,
+        e.user_id user_id,u.user_name u_user_name
+        from t_examine e
+        left join t_user u
+        on e.user_id = u.user_id
+        left join t_flow_node fn
+        on e.flow_node_id = fn.flow_node_id
+        where e.user_id = #{v}
+        order by examine_date
+    </select>
+    <resultMap id="examineListMap" type="Examine">
+        <id column="examine_id" property="examineId" javaType="String"/>
+        <result column="user_name" property="userName" javaType="String"/>
+        <result column="examine_status" property="examineStatus" javaType="Boolean"/>
+        <result column="examine_info" property="examineInfo" javaType="String"/>
+        <result column="examine_date" property="examineDate" javaType="Long"/>
+        <association property="apply" column="apply_id" javaType="Apply">
+            <id column="apply_id" property="applyId" javaType="String"/>
+        </association>
+        <association property="flowNode" column="flow_node_id" javaType="FlowNode">
+            <id column="flow_node_id" property="flowNodeId" javaType="String"/>
+            <result column="flow_node_name" property="flowNodeName" javaType="String"/>
+        </association>
+        <association property="user" column="user_id" javaType="User">
+            <id column="user_id" property="userId" javaType="String"/>
+            <result column="u_user_name" property="userName" javaType="String"/>
+        </association>
+    </resultMap>
+
+
+</mapper>

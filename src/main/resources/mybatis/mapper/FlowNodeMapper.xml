@@ -18,4 +18,27 @@
          where flow_id = #{v}
     </select>
 
+    <select id="selectFlowNodeByPositionId" parameterType="String" resultMap="flowNodeMap">
+        select
+        fn.flow_node_id flow_node_id,fn.flow_node_name flow_node_name,
+        fn.flow_node_description flow_node_description,
+        f.flow_id flow_id,f.flow_name flow_name,f.flow_description flow_description,
+        f.flow_state flow_state
+        from t_flow_node fn
+        left join t_flow f
+        on fn.flow_id = f.flow_id
+        where fn.position_id = #{v}
+    </select>
+    <resultMap id="flowNodeMap" type="FlowNode">
+        <id column="flow_node_id" property="flowNodeId" javaType="String"/>
+        <result column="flow_node_name" property="flowNodeName" javaType="String"/>
+        <result column="flow_node_description" property="flowNodeDescription" javaType="String"/>
+        <association property="flow" javaType="Flow" column="flow_id">
+            <id column="flow_id" property="flowId" javaType="String"/>
+            <result column="flow_name" property="flowName" javaType="String"/>
+            <result column="flow_description" property="flowDescription" javaType="String"/>
+            <result column="flow_state" property="flowState" javaType="Integer"/>
+        </association>
+    </resultMap>
+
 </mapper>

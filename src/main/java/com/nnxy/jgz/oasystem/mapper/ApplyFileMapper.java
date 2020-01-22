@@ -24,4 +24,11 @@ public interface ApplyFileMapper {
      * @param fileList
      */
     void deleteByList(List<ApplyFile> fileList);
+
+    /**
+     * 通过id查询星系
+     * @param fileId
+     * @return
+     */
+    ApplyFile selectById(String fileId);
 }

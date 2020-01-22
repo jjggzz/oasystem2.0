@@ -12,6 +12,22 @@
         #{fileAddress},#{fileSize},#{apply.applyId})
     </insert>
 
+    <select id="selectById" parameterType="String" resultMap="applyFileMap">
+        select file_id,file_name,file_reality_name,file_address,file_size,apply_id
+        from t_apply_file
+        where file_id = #{v}
+    </select>
+    <resultMap id="applyFileMap" type="ApplyFile">
+        <id column="file_id" property="fileId" javaType="String"/>
+        <result column="file_name" property="fileName" javaType="String"/>
+        <result column="file_reality_name" property="fileRealityName" javaType="String"/>
+        <result column="file_address" property="fileAddress" javaType="String"/>
+        <result column="file_size" property="fileSize" javaType="Long"/>
+        <association property="apply" column="apply_id" javaType="Apply">
+            <id column="apply_id" property="applyId" javaType="String"/>
+        </association>
+    </resultMap>
+
     <delete id="deleteByList" parameterType="List">
         delete from t_apply_file where file_id in
         <foreach collection="list" item="item" open="(" close=")" separator=",">

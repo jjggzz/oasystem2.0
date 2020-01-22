@@ -24,4 +24,11 @@ public interface FlowNodeMapper {
      * @param flowNodeList
      */
     void insert(List<FlowNode> flowNodeList);
+
+    /**
+     * 获取某个职位能够审核的节点
+     * @param positionId
+     * @return
+     */
+    List<FlowNode> selectFlowNodeByPositionId(String positionId);
 }

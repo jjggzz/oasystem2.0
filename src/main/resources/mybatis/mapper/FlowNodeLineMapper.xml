@@ -12,5 +12,40 @@
         </foreach>
     </insert>
 
+    <select id="selectFlowLineByNextNode" parameterType="List" resultMap="flowLineMap">
+        select
+        flow_line_id ,flow_id,prev_node_id,next_node_id,flow_line_description
+        from t_flow_line
+        where next_node_id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.flowNodeId}
+        </foreach>
+    </select>
+    <select id="selectFlowLineByPrevNode" parameterType="String" resultMap="flowLineMap">
+        select
+        flow_line_id ,flow_id,prev_node_id,next_node_id,flow_line_description
+        from t_flow_line
+        where prev_node_id = #{v}
+    </select>
+    <select id="selectPrevNodeIsNull" parameterType="String" resultMap="flowLineMap">
+        select
+        flow_line_id ,flow_id,prev_node_id,next_node_id,flow_line_description
+        from t_flow_line
+        where flow_id = #{v} and prev_node_id is null
+    </select>
+    <resultMap id="flowLineMap" type="FlowLine">
+        <id column="flow_line_id" property="flowLineId" javaType="String"/>
+        <result column="flow_line_description" property="flowLineDescription" javaType="String"/>
+        <association property="flow" column="flow_id" javaType="Flow" >
+            <id column="flow_id" property="flowId" javaType="String"/>
+        </association>
+        <association property="prevNode" column="prev_node_id" javaType="FlowNode">
+            <id column="prev_node_id" property="flowNodeId" javaType="String"/>
+        </association>
+        <association property="nextNode" column="next_node_id" javaType="FlowNode">
+            <id column="next_node_id" property="flowNodeId" javaType="String"/>
+        </association>
+    </resultMap>
+
 
 </mapper>

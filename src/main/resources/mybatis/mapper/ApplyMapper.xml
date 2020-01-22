@@ -23,6 +23,21 @@
         on a.apply_current_node = fn.flow_node_id
         where user_id = #{v}
     </select>
+    <select id="getApplyByFlowId" parameterType="list" resultMap="applyListMap">
+        select
+        a.apply_id apply_id,a.apply_title apply_title,a.apply_description apply_description,
+        a.apply_submit_time apply_submit_time,a.apply_state apply_state,a.flow_id flow_id,
+        f.flow_name flow_name,a.apply_current_node apply_current_node,fn.flow_node_name flow_node_name
+        from t_apply a
+        left join t_flow f
+        on a.flow_id = f.flow_id
+        left join t_flow_node fn
+        on a.apply_current_node = fn.flow_node_id
+        where a.apply_state = 1 and a.flow_id in
+        <foreach collection="list" item="item" open="(" close=")" separator=",">
+            #{item.flow.flowId}
+        </foreach>
+    </select>
     <select id="select" parameterType="String" resultMap="applyMap">
         select
         a.apply_id apply_id,a.apply_title apply_title,a.apply_description apply_description,
@@ -87,6 +102,34 @@
     <delete id="delete" parameterType="String">
         delete from t_apply where apply_id = #{v}
     </delete>
+
+    <update id="update" parameterType="Apply">
+        update t_apply
+        <trim prefix="set" suffixOverrides=",">
+            <if test="applyTitle != null and applyTitle != ''">
+                apply_title = #{applyTitle},
+            </if>
+            <if test="applyDescription != null and applyDescription != ''">
+                apply_description = #{applyDescription},
+            </if>
+            <if test="applySubmitTime != null">
+                apply_submit_time = #{applySubmitTime},
+            </if>
+            <if test="applyState != null ">
+                apply_state = #{applyState},
+            </if>
+            <if test="flow != null and flow.flowId!=null and flow.flowId !=''">
+                flow_id = #{flow.flowId},
+            </if>
+            <if test="user != null and user.userId!=null and user.userId !=''">
+                user_id = #{user.userId},
+            </if>
+            <if test="applyCurrentNode != null and applyCurrentNode.flowNodeId!=null and applyCurrentNode.flowNodeId !=''">
+                apply_current_node = #{applyCurrentNode.flowNodeId},
+            </if>
+        </trim>
+        where apply_id = #{applyId}
+    </update>
 
 
 </mapper>

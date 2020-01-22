@@ -1,9 +1,11 @@
 package com.nnxy.jgz.oasystem.mapper;
 
 import com.nnxy.jgz.oasystem.entity.Apply;
+import com.nnxy.jgz.oasystem.entity.FlowNode;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author JGZ
@@ -38,4 +40,17 @@ public interface ApplyMapper {
      * @param applyId
      */
     void delete(String applyId);
+
+    /**
+     * 修改任务
+     * @param apply
+     */
+    void update(Apply apply);
+
+    /**
+     * 通过流程id查询任务列表
+     * @param list
+     * @return
+     */
+    List<Apply> getApplyByFlowId(List<FlowNode> list);
 }
