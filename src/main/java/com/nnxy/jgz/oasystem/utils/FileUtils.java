@@ -1,8 +1,5 @@
 package com.nnxy.jgz.oasystem.utils;
 
-import com.sun.deploy.net.HttpResponse;
-import org.springframework.web.servlet.resource.HttpResource;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
