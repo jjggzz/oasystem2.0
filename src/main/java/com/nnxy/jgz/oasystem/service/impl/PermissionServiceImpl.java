@@ -24,4 +24,9 @@ public class PermissionServiceImpl implements PermissionService {
 
         return permissionMapper.permissionList();
     }
+
+    @Override
+    public List<Permission> getPermissionByPositionId(String positionId) {
+        return permissionMapper.getPermissionByPositionId(positionId);
+    }
 }

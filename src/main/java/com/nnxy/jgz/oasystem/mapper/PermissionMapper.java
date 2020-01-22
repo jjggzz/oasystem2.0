@@ -18,4 +18,11 @@ public interface PermissionMapper {
      * @return
      */
     List<Permission> permissionList();
+
+    /**
+     * 通过职位id获取权限列表
+     * @param positionId
+     * @return
+     */
+    List<Permission> getPermissionByPositionId(String positionId);
 }

@@ -8,4 +8,14 @@
         select permission_id,permission_name from t_permission
     </select>
 
+    <select id="getPermissionByPositionId" parameterType="String" resultType="Permission">
+        select per.permission_id permission_id,per.permission_name permission_name
+        from t_permission per
+        left join t_position_permission pp
+        on per.permission_id = pp.permission_id
+        left join t_position pos
+        on pos.position_id = pp.position_id
+        where pos.position_id = #{v}
+    </select>
+
 </mapper>
