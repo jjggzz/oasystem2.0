@@ -15,6 +15,9 @@ import com.nnxy.jgz.oasystem.utils.WebSocketMessageEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -43,6 +46,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Autowired
     private NoticeFileService noticeFileService;
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void addNotice(User user,Notice notice, MultipartFile file) throws IOException {
         //插入通知
@@ -75,6 +79,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void addNotice(User user,Notice notice) {
         //设置发送用户
@@ -111,6 +116,7 @@ public class NoticeServiceImpl implements NoticeService {
         return noticeMapper.getUserNoticeListByUserId(userId);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void deleteById(String noticeId) {
         //获取被删通知的信息

@@ -7,6 +7,9 @@ import com.nnxy.jgz.oasystem.mapper.NoticeReadMapper;
 import com.nnxy.jgz.oasystem.service.NoticeReadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author JGZ
@@ -19,6 +22,7 @@ public class NoticeReadServiceImpl implements NoticeReadService {
     @Autowired
     private NoticeReadMapper noticeReadMapper;
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void readNotice(User user, Notice notice) {
         //设置数据

@@ -9,6 +9,9 @@ import com.nnxy.jgz.oasystem.service.ApplyService;
 import com.nnxy.jgz.oasystem.service.ExamineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,6 +40,7 @@ public class ExamineServiceImpl implements ExamineService {
     }
 
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void examine(Examine examine) {
         //获取任务信息

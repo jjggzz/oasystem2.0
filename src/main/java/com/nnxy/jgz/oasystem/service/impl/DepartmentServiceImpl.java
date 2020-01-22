@@ -5,6 +5,9 @@ import com.nnxy.jgz.oasystem.mapper.DepartmentMapper;
 import com.nnxy.jgz.oasystem.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         return departmentMapper.departmentList();
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public Department addDepartment(Department department) {
         if(department.getDepartmentParent() == null){
@@ -39,6 +43,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         return dbDepartment;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void deleteDepartment(String departmentId) {
         //获取被删部门的树
@@ -72,6 +77,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void update(Department department) {
         departmentMapper.update(department);

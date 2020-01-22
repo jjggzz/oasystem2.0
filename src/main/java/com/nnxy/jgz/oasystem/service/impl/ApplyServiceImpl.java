@@ -14,6 +14,9 @@ import com.nnxy.jgz.oasystem.utils.ProjectConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -53,6 +56,7 @@ public class ApplyServiceImpl implements ApplyService {
     @Autowired
     private ProjectConfig projectConfig;
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void addApply(Apply apply, MultipartFile file) throws IOException {
         //设置任务id
@@ -86,11 +90,13 @@ public class ApplyServiceImpl implements ApplyService {
         file.transferTo(f);
     }
 
+
     @Override
     public List<Apply> getApplyByUserId(String userId) {
         return applyMapper.getApplyByUserId(userId);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void deleteByApplyId(String applyId) {
         //获取任务信息
@@ -103,6 +109,7 @@ public class ApplyServiceImpl implements ApplyService {
        applyMapper.delete(applyId);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void alterApply(Apply apply) {
         applyMapper.update(apply);
@@ -159,6 +166,7 @@ public class ApplyServiceImpl implements ApplyService {
         return newApplyList;
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void update(Apply apply) {
         applyMapper.update(apply);

@@ -5,6 +5,9 @@ import com.nnxy.jgz.oasystem.mapper.PositionMapper;
 import com.nnxy.jgz.oasystem.service.PositionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -24,6 +27,7 @@ public class PositionServiceImpl implements PositionService {
         return positionMapper.positionList();
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void addPosition(Position position) {
 
@@ -34,11 +38,13 @@ public class PositionServiceImpl implements PositionService {
         }
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void delPositionById(String positionId) {
         positionMapper.deleteById(positionId);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void alterPosition(Position position) {
         //修改职位表

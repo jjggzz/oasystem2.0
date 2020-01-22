@@ -5,6 +5,9 @@ import com.nnxy.jgz.oasystem.mapper.ApplyFileMapper;
 import com.nnxy.jgz.oasystem.service.ApplyFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.util.List;
@@ -20,6 +23,7 @@ public class ApplyFileServiceImpl implements ApplyFileService {
     @Autowired
     private ApplyFileMapper applyFileMapper;
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void deleteByList(List<ApplyFile> fileList) {
         //删除数据库中记录

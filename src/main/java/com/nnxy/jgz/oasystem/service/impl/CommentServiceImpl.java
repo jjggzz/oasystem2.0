@@ -7,6 +7,9 @@ import com.nnxy.jgz.oasystem.mapper.CommentMapper;
 import com.nnxy.jgz.oasystem.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +28,7 @@ public class CommentServiceImpl implements CommentService {
     @Autowired
     private CommentMapper commentMapper;
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void insert(Comment comment) {
         //设置id
@@ -39,6 +43,7 @@ public class CommentServiceImpl implements CommentService {
         articleMapper.update(article);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void deleteCommentByCommentId(String commentId) {
         //查询该评论的文章id

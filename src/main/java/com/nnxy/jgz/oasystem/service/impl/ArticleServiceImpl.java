@@ -11,6 +11,9 @@ import com.nnxy.jgz.oasystem.utils.ProjectConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -43,11 +46,13 @@ public class ArticleServiceImpl implements ArticleService {
         return articleMapper.articleList();
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void update(Article article) {
         articleMapper.update(article);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void delete(String articleId) {
         //查询
@@ -72,6 +77,7 @@ public class ArticleServiceImpl implements ArticleService {
         return createNewList(articleList);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void insert(Article article, MultipartFile file) throws IOException {
         //设置id

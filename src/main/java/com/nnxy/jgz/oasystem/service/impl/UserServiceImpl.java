@@ -11,6 +11,9 @@ import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -40,6 +43,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.getUserByAccount(userAccount);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void updatePasswordByAccount(User user) {
         //用账号做盐值
@@ -63,11 +67,13 @@ public class UserServiceImpl implements UserService {
         return userMapper.userList();
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void deleteById(String userId) {
         userMapper.deleteById(userId);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void update(User user, MultipartFile file) throws IOException {
         //获取文件后缀名
@@ -89,6 +95,7 @@ public class UserServiceImpl implements UserService {
         file.transferTo(f);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void update(User user) {
         //如果密码不为空
@@ -108,6 +115,7 @@ public class UserServiceImpl implements UserService {
         userMapper.updateUserId(user);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public User addUser(User user) {
         Random random = new Random();

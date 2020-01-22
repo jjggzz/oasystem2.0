@@ -9,6 +9,9 @@ import com.nnxy.jgz.oasystem.utils.ProjectConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -31,6 +34,7 @@ public class UserFileServiceImpl implements UserFileService {
     @Autowired
     ProjectConfig projectConfig;
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void uploadFile(User user, MultipartFile file) throws IOException {
         //获取文件后缀名
@@ -67,6 +71,7 @@ public class UserFileServiceImpl implements UserFileService {
         return userFileMapper.getUserFileListByUserId(userId);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void deleteUserFileByFileId(String fileId) {
        UserFile userFile = userFileMapper.getUserFileByFileId(fileId);

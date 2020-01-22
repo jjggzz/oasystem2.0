@@ -5,6 +5,9 @@ import com.nnxy.jgz.oasystem.mapper.NoticeFileMapper;
 import com.nnxy.jgz.oasystem.service.NoticeFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.util.List;
@@ -25,6 +28,7 @@ public class NoticeFileServiceImpl implements NoticeFileService {
         return noticeFileMapper.getNoticeFileById(fileId);
     }
 
+    @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
     @Override
     public void delFile(String fileId) {
         //获取通知文件的信息
