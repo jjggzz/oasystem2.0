@@ -3,6 +3,8 @@ package com.nnxy.jgz.oasystem.controller;
 import com.nnxy.jgz.oasystem.entity.Flow;
 import com.nnxy.jgz.oasystem.service.FlowService;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ public class FlowController {
      * 获取流程列表
      * @return
      */
+    @RequiresPermissions(value={"admin:all","flow:list"},logical= Logical.OR)
     @GetMapping("/flow/flowList")
     public ResponseMessage flowList(){
         try {
@@ -43,6 +46,7 @@ public class FlowController {
      * @param flow
      * @return
      */
+    @RequiresPermissions(value={"admin:all","flow:alter"},logical= Logical.OR)
     @PutMapping("/flow/{flowId}")
      public ResponseMessage updateFlow(@PathVariable("flowId") String flowId,@RequestBody Flow flow){
         try{
@@ -55,6 +59,7 @@ public class FlowController {
         }
      }
 
+    @RequiresPermissions(value={"admin:all","flow:del"},logical= Logical.OR)
      @DeleteMapping("/flow/{flowId}")
      public ResponseMessage deleteFlow(@PathVariable("flowId") String flowId){
         try{
@@ -66,6 +71,7 @@ public class FlowController {
         }
      }
 
+    @RequiresPermissions(value={"admin:all","flow:add"},logical= Logical.OR)
      @PostMapping("/flow")
      public ResponseMessage addFlow(@RequestBody Flow flow){
          try{

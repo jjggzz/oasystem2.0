@@ -6,6 +6,8 @@ import com.nnxy.jgz.oasystem.service.ExamineService;
 import com.nnxy.jgz.oasystem.utils.ErrorEnum;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,7 @@ public class ExamineController {
      * 添加审批信息
      * @return
      */
+    @RequiresPermissions(value={"admin:all","examine:add"},logical= Logical.OR)
     @PostMapping("/examine")
     public ResponseMessage addExamine(@RequestBody Examine examine){
         System.out.println(examine);
@@ -55,6 +58,7 @@ public class ExamineController {
      * @param userId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","examine:list"},logical= Logical.OR)
     @GetMapping("/examineList/{userId}")
     public ResponseMessage examineList(@PathVariable("userId") String userId){
         try {

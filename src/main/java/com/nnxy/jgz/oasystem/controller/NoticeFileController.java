@@ -4,6 +4,8 @@ import com.nnxy.jgz.oasystem.entity.NoticeFile;
 import com.nnxy.jgz.oasystem.service.NoticeFileService;
 import com.nnxy.jgz.oasystem.utils.FileUtils;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,7 @@ public class NoticeFileController {
      * @param response
      * @return
      */
+    @RequiresPermissions(value={"admin:all","file:get"},logical= Logical.OR)
     @GetMapping("/noticeFile/download/{fileId}")
     public void downLoadFile(@PathVariable("fileId") String fileId,
                                         HttpServletResponse response){
@@ -50,6 +53,7 @@ public class NoticeFileController {
      * @param fileId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","file:del"},logical= Logical.OR)
     @DeleteMapping("/noticeFile/{fileId}")
     public ResponseMessage delFile(@PathVariable("fileId") String fileId){
         try {
@@ -65,6 +69,7 @@ public class NoticeFileController {
      * 获取文件列表
      * @return
      */
+    @RequiresPermissions(value={"admin:all","file:list"},logical= Logical.OR)
     @GetMapping("/noticeFile/noticeFileList")
     public ResponseMessage fileList(){
         try {

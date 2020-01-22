@@ -3,6 +3,8 @@ package com.nnxy.jgz.oasystem.controller;
 import com.nnxy.jgz.oasystem.entity.ApplyFile;
 import com.nnxy.jgz.oasystem.service.ApplyFileService;
 import com.nnxy.jgz.oasystem.utils.FileUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +24,12 @@ public class ApplyFileController {
     @Autowired
     private ApplyFileService applyFileService;
 
+    /**
+     * 下载任务文件
+     * @param fileId
+     * @param response
+     */
+    @RequiresPermissions(value={"admin:all","file:get"},logical= Logical.OR)
     @GetMapping("/applyFile/download/{fileId}")
     public void downloadFile(@PathVariable("fileId") String fileId, HttpServletResponse response){
         try{

@@ -3,6 +3,8 @@ package com.nnxy.jgz.oasystem.controller;
 import com.nnxy.jgz.oasystem.entity.Department;
 import com.nnxy.jgz.oasystem.service.DepartmentService;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,7 @@ public class DepartmentController {
      * 获取部门列表
      * @return
      */
+    @RequiresPermissions(value={"admin:all","dep:list"},logical= Logical.OR)
     @GetMapping("/department/departmentList")
     public ResponseMessage departmentList(){
         try {
@@ -44,6 +47,7 @@ public class DepartmentController {
      * @param department
      * @return
      */
+    @RequiresPermissions(value={"admin:all","dep:add"},logical= Logical.OR)
     @PostMapping("/department/add")
     public ResponseMessage addDepartment(@RequestBody Department department){
         try {
@@ -62,6 +66,7 @@ public class DepartmentController {
      * @param departmentId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","dep:del"},logical= Logical.OR)
     @DeleteMapping("/department/{departmentId}")
     public ResponseMessage deleteDepartment(@PathVariable("departmentId") String departmentId){
         try {
@@ -80,6 +85,7 @@ public class DepartmentController {
      * @param department
      * @return
      */
+    @RequiresPermissions(value={"admin:all","dep:alter"},logical= Logical.OR)
     @PutMapping("/department/{departmentId}")
     public ResponseMessage updateDepartment(@PathVariable("departmentId") String departmentId,@RequestBody Department department){
         try {

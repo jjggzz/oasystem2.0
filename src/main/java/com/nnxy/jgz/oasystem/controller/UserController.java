@@ -7,6 +7,8 @@ import com.nnxy.jgz.oasystem.utils.FileUtils;
 import com.nnxy.jgz.oasystem.utils.ProjectConfig;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -35,6 +37,7 @@ public class UserController {
     @Autowired
     private ProjectConfig projectConfig;
 
+    @RequiresPermissions(value={"admin:all","user:list"},logical= Logical.OR)
     @GetMapping("/user/userList")
     public ResponseMessage userList(HttpServletRequest request){
         try {
@@ -59,6 +62,7 @@ public class UserController {
      * 添加用户
      * @return
      */
+    @RequiresPermissions(value={"admin:all","user:add"},logical= Logical.OR)
     @PostMapping("/user/add")
     public ResponseMessage addUser(@RequestBody User user){
         try {
@@ -80,6 +84,7 @@ public class UserController {
      * @param user
      * @return
      */
+    @RequiresPermissions(value={"admin:all","user:alter"},logical= Logical.OR)
     @PutMapping("/user/{userId}")
     public ResponseMessage updateUser(@PathVariable("userId") String userId,@RequestBody User user){
         try{
@@ -131,6 +136,7 @@ public class UserController {
      * @param file
      * @return
      */
+    @RequiresPermissions(value={"admin:all","user:alter"},logical= Logical.OR)
     @PostMapping("/user/uploadPortrait/{userId}")
     public ResponseMessage uploadPortrait(@PathVariable("userId") String userId,MultipartFile file) {
         try {
@@ -150,6 +156,7 @@ public class UserController {
      * @param userId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","user:del"},logical= Logical.OR)
     @DeleteMapping("/user/{userId}")
     public ResponseMessage deleteUser(@PathVariable("userId") String userId){
         try {

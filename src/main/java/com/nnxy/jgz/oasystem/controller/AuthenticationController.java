@@ -136,6 +136,11 @@ public class AuthenticationController {
     }
 
 
+    /**
+     * 修改密码
+     * @param user
+     * @return
+     */
     @PutMapping("/updatePassword")
     public ResponseMessage updatePassword(@RequestBody User user){
         Subject subject = SecurityUtils.getSubject();

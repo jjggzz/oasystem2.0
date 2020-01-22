@@ -8,6 +8,8 @@ import com.nnxy.jgz.oasystem.utils.ErrorEnum;
 import com.nnxy.jgz.oasystem.utils.FileUtils;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,7 @@ public class UserFileController {
      * @param file
      * @return
      */
+    @RequiresPermissions(value={"admin:all","file:add"},logical= Logical.OR)
     @PostMapping("/userFile")
     public ResponseMessage uploadFile(MultipartFile file){
         try {
@@ -60,6 +63,7 @@ public class UserFileController {
      * @param userId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","file:list"},logical= Logical.OR)
     @GetMapping("/userFile/userFileList/{userId}")
     public ResponseMessage userFileList(@PathVariable("userId") String userId){
         try {
@@ -79,6 +83,7 @@ public class UserFileController {
      * @param fileId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","file:del"},logical= Logical.OR)
     @DeleteMapping("/userFile/{fileId}")
     public ResponseMessage deleteUserFile(@PathVariable("fileId") String fileId){
         try{
@@ -91,6 +96,7 @@ public class UserFileController {
         }
     }
 
+    @RequiresPermissions(value={"admin:all","file:get"},logical= Logical.OR)
     @GetMapping("/userFile/download/{fileId}")
     public void downloadFile(@PathVariable("fileId") String fileId,
                              HttpServletResponse response){

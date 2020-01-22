@@ -3,6 +3,8 @@ package com.nnxy.jgz.oasystem.controller;
 import com.nnxy.jgz.oasystem.entity.Permission;
 import com.nnxy.jgz.oasystem.service.PermissionService;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +27,7 @@ public class PermissionController {
      * 权限列表
      * @return
      */
+    @RequiresPermissions(value={"admin:all","permission:list"},logical= Logical.OR)
     @GetMapping("/permission/permissionList")
     public ResponseMessage permissionList(){
         try {

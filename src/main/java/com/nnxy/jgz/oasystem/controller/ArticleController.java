@@ -6,6 +6,8 @@ import com.nnxy.jgz.oasystem.service.ArticleService;
 import com.nnxy.jgz.oasystem.utils.ErrorEnum;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +31,7 @@ public class ArticleController {
      * 获取文章列表
      * @return
      */
+    @RequiresPermissions(value={"admin:all","article:list"},logical= Logical.OR)
     @GetMapping("/article/articleList")
     public ResponseMessage articleList(){
         try {
@@ -46,6 +49,7 @@ public class ArticleController {
      * 获取文章列表
      * @return
      */
+    @RequiresPermissions(value={"admin:all","article:list"},logical= Logical.OR)
     @GetMapping("/article/userArticle/{userId}")
     public ResponseMessage articleList(@PathVariable("userId")  String userId){
         try {
@@ -63,6 +67,7 @@ public class ArticleController {
      * 获取文章列表
      * @return
      */
+    @RequiresPermissions(value={"admin:all","article:list"},logical= Logical.OR)
     @GetMapping("/article/articleList/{articleType}")
     public ResponseMessage articleList(@PathVariable("articleType") Integer articleType){
         try {
@@ -83,6 +88,7 @@ public class ArticleController {
      * @param article
      * @return
      */
+    @RequiresPermissions(value={"admin:all","article:alter"},logical= Logical.OR)
     @PutMapping("/article/{articleId}")
     public ResponseMessage alterArticle(@PathVariable("articleId") String articleId,
                                         @RequestBody Article article){
@@ -101,6 +107,7 @@ public class ArticleController {
      * @param articleId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","article:del"},logical= Logical.OR)
     @DeleteMapping("/article/{articleId}")
     public ResponseMessage deleteArticle(@PathVariable("articleId") String articleId){
         try {
@@ -117,6 +124,7 @@ public class ArticleController {
      * @param articleId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","article:get"},logical= Logical.OR)
     @GetMapping("/article/{articleId}")
     public ResponseMessage getArticle(@PathVariable("articleId") String articleId){
         try {
@@ -137,6 +145,7 @@ public class ArticleController {
      * @param file
      * @return
      */
+    @RequiresPermissions(value={"admin:all","article:add"},logical= Logical.OR)
     @PostMapping("/article")
     public ResponseMessage addArticle(Article article,MultipartFile file){
         try {

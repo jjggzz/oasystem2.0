@@ -9,8 +9,9 @@ import com.nnxy.jgz.oasystem.service.ApplyService;
 import com.nnxy.jgz.oasystem.utils.ErrorEnum;
 import com.nnxy.jgz.oasystem.utils.ProjectConfig;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
-import org.apache.ibatis.annotations.Delete;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +40,7 @@ public class ApplyController {
      * @param file
      * @return
      */
+    @RequiresPermissions(value={"admin:all","apply:add"},logical= Logical.OR)
     @PostMapping("/apply")
     public ResponseMessage addApply(ApplyDto applyDto, MultipartFile file){
         try {
@@ -68,6 +70,7 @@ public class ApplyController {
      * @param applyId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","apply:del"},logical= Logical.OR)
     @DeleteMapping("/apply/{applyId}")
     public ResponseMessage delApply(@PathVariable("applyId") String applyId){
         try {
@@ -86,6 +89,7 @@ public class ApplyController {
      * @param apply
      * @return
      */
+    @RequiresPermissions(value={"admin:all","apply:alter"},logical= Logical.OR)
     @PutMapping("/apply/{applyId}")
     public ResponseMessage alterApply(@PathVariable("applyId") String applyId,
                                       @RequestBody Apply apply){
@@ -108,6 +112,7 @@ public class ApplyController {
      * @param applyId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","apply:get"},logical= Logical.OR)
     @GetMapping("/apply/{applyId}")
     public ResponseMessage getApply(@PathVariable("applyId") String applyId){
         try {
@@ -132,6 +137,7 @@ public class ApplyController {
      * @param userId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","apply:list"},logical= Logical.OR)
     @GetMapping("/applyList/{userId}")
     public ResponseMessage getUserApplyList(@PathVariable("userId") String userId){
         try {
@@ -150,6 +156,7 @@ public class ApplyController {
      * @param userId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","apply:list"},logical= Logical.OR)
     @GetMapping("/examineApplyList/{userId}")
     public ResponseMessage getUserExamineApplyList(@PathVariable("userId") String userId){
         try {

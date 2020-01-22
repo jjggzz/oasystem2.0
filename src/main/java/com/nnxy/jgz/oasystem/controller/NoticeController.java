@@ -7,6 +7,8 @@ import com.nnxy.jgz.oasystem.service.NoticeService;
 import com.nnxy.jgz.oasystem.utils.ProjectConfig;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +40,7 @@ public class NoticeController {
      * @param file
      * @return
      */
+    @RequiresPermissions(value={"admin:all","notice:add"},logical= Logical.OR)
     @PostMapping("/noticeFile")
     public ResponseMessage addNotice(Notice notice, MultipartFile file){
         try{
@@ -62,6 +65,7 @@ public class NoticeController {
      * @param notice
      * @return
      */
+    @RequiresPermissions(value={"admin:all","notice:add"},logical= Logical.OR)
     @PostMapping("/notice")
     public ResponseMessage addNotice(@RequestBody Notice notice){
         try{
@@ -84,6 +88,7 @@ public class NoticeController {
      * 获取已读通知列表
      * @return
      */
+    @RequiresPermissions(value={"admin:all","notice:get"},logical= Logical.OR)
     @GetMapping("/notice/readNoticeList/{userId}")
     public ResponseMessage getReadNoticeList(@PathVariable("userId") String userId){
         try {
@@ -99,9 +104,10 @@ public class NoticeController {
     }
 
     /**
-     * 获取未读通知列表失败
+     * 获取未读通知列表
      * @return
      */
+    @RequiresPermissions(value={"admin:all","notice:list"},logical= Logical.OR)
     @GetMapping("/notice/unReadNoticeList/{userId}")
     public ResponseMessage getUnReadNoticeList(@PathVariable("userId") String userId){
         try {
@@ -121,6 +127,7 @@ public class NoticeController {
      * @param noticeId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","notice:get"},logical= Logical.OR)
     @GetMapping("/notice/{noticeId}")
     public ResponseMessage getNotice(@PathVariable("noticeId") String noticeId, HttpServletRequest request){
         try {
@@ -147,6 +154,7 @@ public class NoticeController {
      * @param userId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","notice:list"},logical= Logical.OR)
     @GetMapping("/notice/userNoticeList/{userId}")
     public ResponseMessage getUserNoticeList(@PathVariable("userId") String userId){
         try {
@@ -166,6 +174,7 @@ public class NoticeController {
      * @param noticeId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","notice:del"},logical= Logical.OR)
     @DeleteMapping("/notice/{noticeId}")
     public ResponseMessage delNotice(@PathVariable("noticeId") String noticeId){
         try {

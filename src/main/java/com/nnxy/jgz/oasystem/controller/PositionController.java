@@ -5,6 +5,8 @@ import com.nnxy.jgz.oasystem.entity.Permission;
 import com.nnxy.jgz.oasystem.entity.Position;
 import com.nnxy.jgz.oasystem.service.PositionService;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +30,7 @@ public class PositionController {
      * 获取职位列表
      * @return
      */
+    @RequiresPermissions(value={"admin:all","position:list"},logical= Logical.OR)
     @GetMapping("/position/positionList")
     public ResponseMessage positionList(){
         try {
@@ -46,6 +49,7 @@ public class PositionController {
      * @param positionDto
      * @return
      */
+    @RequiresPermissions(value={"admin:all","position:add"},logical= Logical.OR)
     @PostMapping("/position")
     public ResponseMessage addPosition(@RequestBody PositionDto positionDto){
         //数据封装
@@ -71,6 +75,7 @@ public class PositionController {
         }
     }
 
+    @RequiresPermissions(value={"admin:all","position:del"},logical= Logical.OR)
     @DeleteMapping("/position/{positionId}")
     public ResponseMessage delPosition(@PathVariable("positionId") String positionId){
         try {
@@ -83,6 +88,7 @@ public class PositionController {
         }
     }
 
+    @RequiresPermissions(value={"admin:all","position:alter"},logical= Logical.OR)
     @PutMapping("/position/{positionId}")
     public ResponseMessage alterPosition(@PathVariable("positionId") String positionId,
                                          @RequestBody PositionDto positionDto){

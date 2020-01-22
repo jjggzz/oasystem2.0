@@ -3,6 +3,8 @@ package com.nnxy.jgz.oasystem.controller;
 import com.nnxy.jgz.oasystem.entity.Comment;
 import com.nnxy.jgz.oasystem.service.CommentService;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,7 @@ public class CommentController {
      * @param comment
      * @return
      */
+    @RequiresPermissions(value={"admin:all","comment:add"},logical= Logical.OR)
     @PostMapping("/comment")
     public ResponseMessage addComment(@RequestBody Comment comment){
         try {
@@ -40,6 +43,7 @@ public class CommentController {
      * @param commentId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","comment:del"},logical= Logical.OR)
     @DeleteMapping("/comment/{commentId}")
     public ResponseMessage delComment(@PathVariable("commentId") String commentId){
         try {

@@ -6,6 +6,8 @@ import com.nnxy.jgz.oasystem.entity.User;
 import com.nnxy.jgz.oasystem.service.NoticeReadService;
 import com.nnxy.jgz.oasystem.utils.ResponseMessage;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +29,7 @@ public class NoticeReadController {
      * @param noticeId
      * @return
      */
+    @RequiresPermissions(value={"admin:all","notice:get"},logical= Logical.OR)
     @PostMapping("/noticeRead/{noticeId}")
     public ResponseMessage noticeRead(@PathVariable("noticeId") String noticeId){
         try {
