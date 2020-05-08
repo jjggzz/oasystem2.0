@@ -36,11 +36,10 @@ public class DepartmentServiceImpl implements DepartmentService {
             //如果父部门属性为空，添加一个空的父部门，为了迎合mapper的sql语句
             department.setDepartmentParent(new Department());
         }
-        String DepartmentId = UUID.randomUUID().toString().replace("-", "");
-        department.setDepartmentId(DepartmentId);
+        String departmentId = UUID.randomUUID().toString().replace("-", "");
+        department.setDepartmentId(departmentId);
         departmentMapper.insert(department);
-        Department dbDepartment = departmentMapper.getDepartmentByDepartmentId(DepartmentId);
-        return dbDepartment;
+        return departmentMapper.getDepartmentByDepartmentId(departmentId);
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ,propagation = Propagation.REQUIRED,rollbackFor = Exception.class)

@@ -50,7 +50,7 @@ create table t_department
    department_parent    varchar(64),
    primary key (department_id),
    key AK_parent (department_parent)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_department comment '部门表';
 
@@ -68,7 +68,7 @@ create table t_apply
    user_id              varchar(64),
    apply_current_node   varchar(64),
    primary key (apply_id)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_apply comment '申请表';
 
@@ -84,7 +84,7 @@ create table t_apply_file
    file_size            bigint,
    apply_id             varchar(64),
    primary key (file_id)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_apply_file comment '申请文件表';
 
@@ -138,7 +138,7 @@ create table t_examine
    examine_info      	varchar(256),
    examine_date         bigint,
    primary key (examine_id)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_examine comment '审批表';
 
@@ -152,7 +152,7 @@ create table t_flow
    flow_description     varchar(128),
    flow_state           int,
    primary key (flow_id)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_flow comment '流程表';
 
@@ -167,7 +167,7 @@ create table t_flow_line
    next_node_id         varchar(64),
    flow_line_description varchar(128),
    primary key (flow_line_id)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_flow_line comment '流程线表';
 
@@ -182,7 +182,7 @@ create table t_flow_node
    flow_id              varchar(64),
    position_id          varchar(64),
    primary key (flow_node_id)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_flow_node comment '流程节点表';
 
@@ -198,7 +198,7 @@ create table t_notice
    user_id              varchar(64),
    notice_type            int,
    primary key (notice_id)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_notice comment '通知表';
 
@@ -214,7 +214,7 @@ create table t_notice_file
    file_size            bigint,
    notice_id            varchar(64),
    primary key (file_id)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_notice_file comment '通知文件表';
 
@@ -227,7 +227,7 @@ create table t_notice_read
    user_id              varchar(64) not null,
    read_time            bigint,
    primary key (notice_id, user_id)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_notice_read comment '通知阅读情况表';
 
@@ -239,7 +239,7 @@ create table t_permission
    permission_id        varchar(64) not null,
    permission_name      varchar(64),
    primary key (permission_id)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_permission comment '权限表';
 
@@ -251,7 +251,7 @@ create table t_position
    position_id          varchar(64) not null,
    position_name        varchar(32),
    primary key (position_id)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_position comment '职位表';
 
@@ -263,7 +263,7 @@ create table t_position_permission
    position_id          varchar(64) not null,
    permission_id        varchar(64) not null,
    primary key (position_id, permission_id)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_position_permission comment '职位权限表';
 
@@ -286,7 +286,7 @@ create table t_user
    position_id          varchar(64),
    primary key (user_id),
    unique key AK_Key_2 (user_account)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_user comment '用户表';
 
@@ -300,7 +300,7 @@ create table t_user_file
    user_id              varchar(64),
    upload_time          bigint,
    primary key (file_id)
-);
+)DEFAULT CHARSET=utf8;
 
 alter table t_user_file comment '用户文件表';
 
@@ -442,6 +442,6 @@ insert into t_position(position_id, position_name) values ('1','管理员');
 /*初始化管理员账号*/
 insert into t_user(user_id, user_account, user_password, user_name,user_create_time,user_status, position_id) values ('1','admin','038bdaf98f2037b31f1e75b5b4c9b26e','管理员',0,1,'1');
 /*初始化管理员职位的权限*/
-insert into t_position_permission(position_id, permission_id) values ('1','1')
+insert into t_position_permission(position_id, permission_id) values ('1','1');
       
 

@@ -56,8 +56,6 @@ public class UserRealm extends AuthorizingRealm {
             //设置用户的权限
             simpleAuthorizationInfo.setStringPermissions(promises);
         }
-
-
         return simpleAuthorizationInfo;
     }
 
